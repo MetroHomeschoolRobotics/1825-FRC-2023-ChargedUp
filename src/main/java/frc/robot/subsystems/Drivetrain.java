@@ -46,7 +46,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void driveMovement(double joystickX, double joystickY) {
-    difDrivetrain.arcadeDrive(joystickX, joystickY, true);
+    difDrivetrain.arcadeDrive(-joystickX, joystickY, true);
   }
 
 
