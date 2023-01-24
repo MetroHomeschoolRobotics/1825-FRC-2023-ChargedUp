@@ -17,8 +17,11 @@ public class DriveTeleop extends CommandBase {
 
 
   /** Creates a new DriveTeleop. */
-  public DriveTeleop() {
+  public DriveTeleop(Drivetrain drivetrain, CommandXboxController driverController) {
     // Use addRequirements() here to declare subsystem dependencies.
+    _drivetrain = drivetrain;
+    xboxController = driverController;
+    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
@@ -27,11 +30,15 @@ public class DriveTeleop extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    _drivetrain.driveMovement(xboxController.getLeftY(), xboxController.getLeftX());
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    _drivetrain.driveMovement(0, 0);
+  }
 
   // Returns true when the command should end.
   @Override
