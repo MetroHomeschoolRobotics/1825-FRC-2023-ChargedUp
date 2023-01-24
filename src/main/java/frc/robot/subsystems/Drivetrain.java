@@ -18,8 +18,8 @@ public class Drivetrain extends SubsystemBase {
   CANSparkMax motor4 = new CANSparkMax(4,MotorType.kBrushless);
 
   // this information could be of use in the future for distance tracking
-  private static final double wheelRadiusInches = 0;
-  private static final double gearRatio = 0;
+  private static final double wheelRadiusInches = 3;
+  private static final double gearRatio = 8.46;
 
 
   private DifferentialDrive difDrivetrain = new DifferentialDrive(motor1, motor3);
