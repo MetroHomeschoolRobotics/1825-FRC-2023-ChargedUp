@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
@@ -30,7 +31,7 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     // set the dead zone between the joysticks
-    difDrivetrain.setDeadband(0.03);
+    difDrivetrain.setDeadband(0.01);
     
     // inverts the right side 
     motor1.getInverted();
@@ -46,7 +47,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void driveMovement(double joystickX, double joystickY) {
-    difDrivetrain.arcadeDrive(-joystickX, joystickY, true);
+    difDrivetrain.arcadeDrive(joystickX, joystickY, true);
   }
 
 

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Drivetrain;
@@ -12,7 +13,8 @@ public class DriveTeleop extends CommandBase {
 
   private CommandXboxController xboxController;
   private Drivetrain _drivetrain;
-
+  private Double forward;
+  private Double turning;
 
 
 
@@ -31,7 +33,10 @@ public class DriveTeleop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _drivetrain.driveMovement(xboxController.getLeftX(), xboxController.getLeftY());
+    forward = -xboxController.getLeftX();
+    turning = xboxController.getLeftY();
+    _drivetrain.driveMovement(forward, turning);
+    SmartDashboard.putNumber("forward", forward);
   }
 
   // Called once the command ends or is interrupted.
