@@ -31,7 +31,7 @@ public class DriveTeleop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _drivetrain.driveMovement(xboxController.getLeftY(), xboxController.getLeftX());
+    _drivetrain.driveMovement(xboxController.getLeftX(), xboxController.getLeftY());
   }
 
   // Called once the command ends or is interrupted.
