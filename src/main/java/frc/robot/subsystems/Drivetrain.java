@@ -27,7 +27,7 @@ public class Drivetrain extends SubsystemBase {
 
 
   private DifferentialDrive difDrivetrain = new DifferentialDrive(motor1, motor3);
-
+  
 
 
 
@@ -75,6 +75,7 @@ public class Drivetrain extends SubsystemBase {
 
 
   public void autoBalance() {
+    difDrivetrain.feed();
     if(gyro.getPitch() >= 11) {
       difDrivetrain.arcadeDrive(0.3, 0, true);
     } else if(gyro.getPitch() <= -11){
