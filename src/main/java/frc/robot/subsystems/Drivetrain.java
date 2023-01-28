@@ -75,9 +75,9 @@ public class Drivetrain extends SubsystemBase {
 
 
   public void autoBalance() {
-    if(gyro.getPitch() >= 25) {
+    if(gyro.getPitch() >= 11) {
       difDrivetrain.arcadeDrive(0.3, 0, true);
-    } else if(gyro.getPitch() <= -25){
+    } else if(gyro.getPitch() <= -11){
       difDrivetrain.arcadeDrive(-0.3, 0,true);
     }
   }

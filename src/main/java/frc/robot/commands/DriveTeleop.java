@@ -42,8 +42,8 @@ public class DriveTeleop extends CommandBase {
       _drivetrain.autoBalance();
     }
     else{
-      forward = -xboxController.getLeftX();
-      turning = xboxController.getLeftY();
+      forward = -xboxController.getLeftY();
+      turning = xboxController.getLeftX();
       _drivetrain.driveMovement(forward, turning);
       SmartDashboard.putNumber("forward", forward);
     }
