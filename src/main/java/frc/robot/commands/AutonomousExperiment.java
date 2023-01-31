@@ -4,46 +4,50 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Drivetrain;
 
+public class AutonomousExperiment extends CommandBase {
 
-public class DriveTeleop extends CommandBase {
-
-  private CommandXboxController xboxController;
-  private XboxController xboxController2 = new XboxController(0);
   private Drivetrain _drivetrain;
-  private Double forward;
-  private Double turning;
+
+  Double distance;
+  Double turnAngle;
+  Double speed;
 
 
-
-  /** Creates a new DriveTeleop. */
-  public DriveTeleop(Drivetrain drivetrain, CommandXboxController driverController) {
+  /** Creates a new AutonomousExperiment. */
+  public AutonomousExperiment(Drivetrain drivetrain,double _speed, double _distance, double turnAngleAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
+    distance = _distance;
+    turnAngle = turnAngleAngle;
+    speed = _speed;
     _drivetrain = drivetrain;
-    xboxController = driverController;
     addRequirements(drivetrain);
   }
+
+
+
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     _drivetrain.resetHeading();
+    _drivetrain.resetEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    forward = xboxController.getLeftX();
-    turning = -xboxController.getLeftY();
-    _drivetrain.driveMovement(forward, turning);
-    SmartDashboard.putNumber("forward", forward);
+    if(distance == null){
+      while(_drivetrain.getHeading() <= turnAngle){
+        _drivetrain.driveMovement(0, speed);
+      }
+    }else if(turnAngle == null){
+      while(_drivetrain.getDistance() <= distance){
+        _drivetrain.driveMovement(speed, 0);
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.

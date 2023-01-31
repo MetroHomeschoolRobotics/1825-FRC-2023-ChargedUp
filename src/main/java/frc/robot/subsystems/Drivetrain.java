@@ -72,14 +72,17 @@ public class Drivetrain extends SubsystemBase {
   public double getPitchAngle() {
     return gyro.getPitch();
   }
+  public double getDistance() {
+    return motor1.getEncoder().getPosition();
+  }
 
 
   public void autoBalance() {
     difDrivetrain.feed();
     if(gyro.getPitch() >= 11) {
-      difDrivetrain.arcadeDrive(0.3, 0, true);
+      difDrivetrain.arcadeDrive(0, 0.3, true);
     } else if(gyro.getPitch() <= -11){
-      difDrivetrain.arcadeDrive(-0.3, 0,true);
+      difDrivetrain.arcadeDrive(0, -0.3,true);
     }
   }
 
@@ -90,11 +93,8 @@ public class Drivetrain extends SubsystemBase {
   }
 
 
-
-
-
-  public void driveMovement(double joystickX, double joystickY) {
-    difDrivetrain.arcadeDrive(joystickX, joystickY, true);
+  public void driveMovement(double Xspeed, double Zrotation) {
+    difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);
   }
 
 
