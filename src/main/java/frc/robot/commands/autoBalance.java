@@ -27,7 +27,12 @@ public class autoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.autoBalance();
+    drivetrain.getSignal();
+    if(drivetrain.getPitchAngle()>=11) {
+      drivetrain.driveMovement(0.3, 0);
+    }else if(drivetrain.getPitchAngle()<=-11){
+      drivetrain.driveMovement(-0.3, 0);
+    }
   }
 
   // Called once the command ends or is interrupted.

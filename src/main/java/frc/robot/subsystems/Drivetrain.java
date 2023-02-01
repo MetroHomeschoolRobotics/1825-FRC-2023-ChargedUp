@@ -62,41 +62,32 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Right Encoder", motor3.getEncoder().getPosition());
     // This method will be called once per scheduler run
   }
-
-  public double getHeading() {
-    return gyro.getAngle();
+  
+  
+  public void resetEncoders() {
+    motor1.getEncoder().setPosition(0);
+    motor3.getEncoder().setPosition(0);
   }
   public void resetHeading() {
     gyro.reset();
+  }
+
+
+  public double getHeading() {
+    return gyro.getAngle();
   }
   public double getPitchAngle() {
     return gyro.getPitch();
   }
   public double getDistance() {
-    return motor1.getEncoder().getPosition();
+    return motor3.getEncoder().getPosition();
   }
-
-
-  public void autoBalance() {
+  public void getSignal() {
     difDrivetrain.feed();
-    if(gyro.getPitch() >= 11) {
-      difDrivetrain.arcadeDrive(0, 0.3, true);
-    } else if(gyro.getPitch() <= -11){
-      difDrivetrain.arcadeDrive(0, -0.3,true);
-    }
-  }
-
-
-  public void resetEncoders() {
-    motor1.getEncoder().setPosition(0);
-    motor3.getEncoder().setPosition(0);
   }
 
 
   public void driveMovement(double Xspeed, double Zrotation) {
     difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);
   }
-
-
-
 }
