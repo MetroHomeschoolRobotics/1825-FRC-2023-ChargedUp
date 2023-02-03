@@ -11,7 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 public class AutonomousExperiment extends CommandBase {
 
   private Drivetrain _drivetrain;
-  private PIDController _PIDController = new PIDController(0.015, 0.01, 0.0025);
+  private PIDController _PIDController = new PIDController(0.015, 0, 0.0025);
 
   Double distance;
   Double turnAngle;
@@ -39,13 +39,12 @@ public class AutonomousExperiment extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Double turning = _PIDController.calculate(turnAngle)-0.5;
-    Double foward = _PIDController.calculate(distance)-0.5;
+    Double turning = _PIDController.calculate(_drivetrain.getHeading(),turnAngle)/0.5;
+    Double foward = _PIDController.calculate(_drivetrain.getDistance(),distance)/0.5;
     if(turnAngle != 0){
         _drivetrain.autoDrive(0, turning);
     }else if(distance != 0){
         _drivetrain.autoDrive(foward,0);
-
     }
     _drivetrain.getSignal();
   }
