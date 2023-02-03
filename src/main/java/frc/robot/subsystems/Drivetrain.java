@@ -37,7 +37,7 @@ public class Drivetrain extends SubsystemBase {
     difDrivetrain.setDeadband(0.01);
     
     // inverts the right side 
-    motor1.getInverted();
+    motor1.setInverted(true);
 
     // causes the other motors to follow the original two motors
     motor2.follow(motor1);
@@ -86,6 +86,11 @@ public class Drivetrain extends SubsystemBase {
     difDrivetrain.feed();
   }
 
+  public void autoDrive(double speed, double rotation) {
+    motor1.set(speed-rotation);
+    motor3.set(speed+rotation);
+    difDrivetrain.feed();
+  }
 
   public void driveMovement(double Xspeed, double Zrotation) {
     difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);

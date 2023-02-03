@@ -40,8 +40,8 @@ public class DriveTeleop extends CommandBase {
   @Override
   public void execute() {
     
-    forward = xboxController.getLeftX();
-    turning = -xboxController.getLeftY();
+    turning = xboxController.getLeftX();
+    forward = -xboxController.getLeftY();
     _drivetrain.driveMovement(forward, turning);
     SmartDashboard.putNumber("forward", forward);
   }

@@ -4,17 +4,16 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutonomousExperiment;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.autoBalance;
 import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTeleop;
@@ -30,11 +29,12 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =new CommandXboxController(0);
-  private final XboxController driverController2 = new XboxController(0);
+  private final CommandXboxController m_driverController = new CommandXboxController(0);
+
   private final Drivetrain r_drivetrain = new Drivetrain();
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain,m_driverController);
   
+  SendableChooser<Command> _autoChooser = new SendableChooser<>();
 
 
 
@@ -51,6 +51,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    getAutoChooserOptions();
     init();
   }
 
@@ -63,19 +64,22 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+  
+    private void getAutoChooserOptions(){
+      _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
+
+      _autoChooser.addOption("Autonomous Test", new AutonomousExperiment(r_drivetrain, 1, 0));
+    
+    SmartDashboard.putData(_autoChooser);
+    }
+
+
+
   private void configureBindings() {
 
-    final JoystickButton bButton = new JoystickButton(driverController2, 2);
-
-    bButton.whileTrue(new autoBalance(r_drivetrain));
-
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    m_driverController.b().whileTrue(new autoBalance(r_drivetrain)).whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
+  
+    
   }
 
   /**
@@ -85,6 +89,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return _autoChooser.getSelected();
   }
 }

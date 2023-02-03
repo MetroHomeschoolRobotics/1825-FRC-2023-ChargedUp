@@ -5,12 +5,14 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 
 public class autoBalance extends CommandBase {
 
+  private PIDController _PIDController = new PIDController(0.017, 0, 0.0025);
   private Drivetrain drivetrain;
 
   /** Creates a new autoBalance. */
@@ -27,12 +29,7 @@ public class autoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.getSignal();
-    if(drivetrain.getPitchAngle()>=11) {
-      drivetrain.driveMovement(0.3, 0);
-    }else if(drivetrain.getPitchAngle()<=-11){
-      drivetrain.driveMovement(-0.3, 0);
-    }
+    drivetrain.autoDrive(-(_PIDController.calculate(drivetrain.getPitchAngle())), 0);
   }
 
   // Called once the command ends or is interrupted.

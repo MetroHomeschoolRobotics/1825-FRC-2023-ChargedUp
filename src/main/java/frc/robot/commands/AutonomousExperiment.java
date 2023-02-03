@@ -4,24 +4,24 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class AutonomousExperiment extends CommandBase {
 
   private Drivetrain _drivetrain;
+  private PIDController _PIDController = new PIDController(0.015, 0.01, 0.0025);
 
   Double distance;
   Double turnAngle;
-  Double speed;
 
 
   /** Creates a new AutonomousExperiment. */
-  public AutonomousExperiment(Drivetrain drivetrain,double _speed, double _distance, double turnAngleAngle) {
+  public AutonomousExperiment(Drivetrain drivetrain, double _distance, double _turnAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
     distance = _distance;
-    turnAngle = turnAngleAngle;
-    speed = _speed;
+    turnAngle = _turnAngle;
     _drivetrain = drivetrain;
     addRequirements(drivetrain);
   }
@@ -39,21 +39,21 @@ public class AutonomousExperiment extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(distance == null){
-      while(_drivetrain.getHeading() <= turnAngle){
-        _drivetrain.driveMovement(0, speed);
-      }
-    }else if(turnAngle == null){
-      while(_drivetrain.getDistance() <= distance){
-        _drivetrain.driveMovement(speed, 0);
-      }
+    Double turning = _PIDController.calculate(turnAngle)-0.5;
+    Double foward = _PIDController.calculate(distance)-0.5;
+    if(turnAngle != 0){
+        _drivetrain.autoDrive(0, turning);
+    }else if(distance != 0){
+        _drivetrain.autoDrive(foward,0);
+
     }
+    _drivetrain.getSignal();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    _drivetrain.driveMovement(0, 0);
+    _drivetrain.autoDrive(0, 0);
   }
 
   // Returns true when the command should end.
