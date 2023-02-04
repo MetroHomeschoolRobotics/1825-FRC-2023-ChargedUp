@@ -56,10 +56,14 @@ public class Drivetrain extends SubsystemBase {
   
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Navx Gyro", gyro.getAngle());
-    SmartDashboard.putData(gyro);
     SmartDashboard.putNumber("Left Encoder", motor1.getEncoder().getPosition());
     SmartDashboard.putNumber("Right Encoder", motor3.getEncoder().getPosition());
+    SmartDashboard.putNumber("Encoder Difference", motor1.getEncoder().getPosition() - motor3.getEncoder().getPosition());
+    SmartDashboard.putNumber("Distance", motor3.getEncoder().getPosition());
+    SmartDashboard.putNumber("Velocity", motor3.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Heading", gyro.getAngle());
+    SmartDashboard.putData(gyro);
+    SmartDashboard.putNumber("Rotate Angle", gyro.getYaw());
     // This method will be called once per scheduler run
   }
   
@@ -82,16 +86,19 @@ public class Drivetrain extends SubsystemBase {
   public double getDistance() {
     return motor3.getEncoder().getPosition();
   }
+  public double getDistance1() {
+    return motor1.getEncoder().getPosition();
+  }
   public void getSignal() {
     difDrivetrain.feed();
   }
 
+
   public void autoDrive(double speed, double rotation) {
     motor1.set(speed-rotation);
-    motor3.set(speed+rotation);
+    motor3.set(speed-rotation);
     difDrivetrain.feed();
   }
-
   public void driveMovement(double Xspeed, double Zrotation) {
     difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);
   }
