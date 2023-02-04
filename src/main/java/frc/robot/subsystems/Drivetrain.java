@@ -27,7 +27,7 @@ public class Drivetrain extends SubsystemBase {
 
 
   private DifferentialDrive difDrivetrain = new DifferentialDrive(motor1, motor3);
-
+  
 
 
 
@@ -37,7 +37,7 @@ public class Drivetrain extends SubsystemBase {
     difDrivetrain.setDeadband(0.01);
     
     // inverts the right side 
-    motor1.getInverted();
+    motor1.setInverted(true);
 
     // causes the other motors to follow the original two motors
     motor2.follow(motor1);
@@ -62,40 +62,37 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Right Encoder", motor3.getEncoder().getPosition());
     // This method will be called once per scheduler run
   }
-
-  public double getHeading() {
-    return gyro.getAngle();
-  }
-  public void resetHeading() {
-    gyro.reset();
-  }
-  public double getPitchAngle() {
-    return gyro.getPitch();
-  }
-
-
-  public void autoBalance() {
-    if(gyro.getPitch() >= 11) {
-      difDrivetrain.arcadeDrive(0.3, 0, true);
-    } else if(gyro.getPitch() <= -11){
-      difDrivetrain.arcadeDrive(-0.3, 0,true);
-    }
-  }
-
-
+  
+  
   public void resetEncoders() {
     motor1.getEncoder().setPosition(0);
     motor3.getEncoder().setPosition(0);
   }
-
-
-
-
-
-  public void driveMovement(double joystickX, double joystickY) {
-    difDrivetrain.arcadeDrive(joystickX, joystickY, true);
+  public void resetHeading() {
+    gyro.reset();
   }
 
 
+  public double getHeading() {
+    return gyro.getAngle();
+  }
+  public double getPitchAngle() {
+    return gyro.getPitch();
+  }
+  public double getDistance() {
+    return motor3.getEncoder().getPosition();
+  }
+  public void getSignal() {
+    difDrivetrain.feed();
+  }
 
+  public void autoDrive(double speed, double rotation) {
+    motor1.set(speed-rotation);
+    motor3.set(speed+rotation);
+    difDrivetrain.feed();
+  }
+
+  public void driveMovement(double Xspeed, double Zrotation) {
+    difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);
+  }
 }
