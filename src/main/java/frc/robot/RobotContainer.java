@@ -5,9 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.AutonomousExperiment;
-import frc.robot.commands.Autos;
 import frc.robot.commands.autoBalance;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,26 +15,27 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTeleop;
+import frc.robot.commands.AutoTurnExperiment;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(0);
 
   private final Drivetrain r_drivetrain = new Drivetrain();
-  private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain,m_driverController);
-  
+  private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
+
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
-
-
 
   private void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
@@ -46,40 +45,48 @@ public class RobotContainer {
     setDefaultCommands();
   }
 
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    // get the auto chooser options
     getAutoChooserOptions();
     init();
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  
-    private void getAutoChooserOptions(){
-      _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
 
-      _autoChooser.addOption("Autonomous Test", new AutonomousExperiment(r_drivetrain, 1, 0));
-    
+  private void getAutoChooserOptions() {
+    _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
+
+    _autoChooser.addOption("Autonomous Test", new AutoTurnExperiment(r_drivetrain, 90));
+        //new AutonomousExperiment(r_drivetrain, 200, 0).andThen(new AutoTurnExperiment(r_drivetrain, 180)));
+
+    _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -100, 0));
+
     SmartDashboard.putData(_autoChooser);
-    }
-
-
+  }
 
   private void configureBindings() {
+    // make 'B' turn on autoBalance when held
+    m_driverController.b().whileTrue(new autoBalance(r_drivetrain))
+        .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
 
-    m_driverController.b().whileTrue(new autoBalance(r_drivetrain)).whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
-  
-    
   }
 
   /**
@@ -88,7 +95,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
+    
+    // this runs the selected autonomous command☺
     return _autoChooser.getSelected();
   }
 }
