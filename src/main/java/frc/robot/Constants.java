@@ -4,16 +4,19 @@
 
 package frc.robot;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
-public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.util.Units;
+
+/** Add your docs here. */
+public class Constants {
+    public final double ksVolts = 0.11787;
+    public final double kvVolts = 0.05655;
+    public final double kaVolts = 0.0030613;
+    public final double kpDriveVel = 0.000022962;
+
+    public final double _trackWidthMeters = Units.inchesToMeters(24);
+    public final DifferentialDriveKinematics _diffDriveKinematics = new DifferentialDriveKinematics(_trackWidthMeters);
+
+    public final double ramseteB = 2;
+    public final double ramseteZeta = 0.7;
 }
