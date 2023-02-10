@@ -9,34 +9,31 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.math.MathUtil;
 
-public class AutonomousExperiment extends CommandBase {
+public class AutoTurnExperiment extends CommandBase {
 
   private Drivetrain _drivetrain;           //outputs a number of distance          outputs how fast you're moving away
-//                                            Probably must be below 1.  We didn't seem to need ki.  If kd is too high, it oscillate
-  private PIDController _PIDController = new PIDController(0.0000000017, 0, .0025);
-  // motor output = kp x error    motor output = ki x errorSum
-  double distance;
-  double turnAngle;
+//                                            Probably must be below 1
+  private PIDController _PIDController = new PIDController(0.0089, 0, 0.053);
 
 
-  /** Creates a new AutonomousExperiment. */
-  public AutonomousExperiment(Drivetrain drivetrain, double _distance, double _turnAngle) {
+  Double turnAngle;
+
+  /** Creates a new AutoTurnExperiment. */
+  public AutoTurnExperiment(Drivetrain drivetrain, double _turnAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
-    distance = _distance;
     turnAngle = _turnAngle;
     _drivetrain = drivetrain;
     addRequirements(drivetrain);
   }
-
-
-
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     _drivetrain.resetHeading();
     _drivetrain.resetEncoders();
+    _PIDController.enableContinuousInput(-180, 180);
     _PIDController.setTolerance(2,5);
     _PIDController.setIntegratorRange(-.5, .5);
   }
@@ -44,22 +41,23 @@ public class AutonomousExperiment extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Double turning = _PIDController.calculate(.5*(_drivetrain.getDistanceL()+_drivetrain.getDistanceR()),distance);
-    Double forward = MathUtil.clamp(_PIDController.calculate(.5*(_drivetrain.getDistanceL()+_drivetrain.getDistanceR()), distance),-.5,.5);
+    Double turning = _PIDController.calculate(_drivetrain.getHeading(),turnAngle);
+    Double forward = MathUtil.clamp(_PIDController.calculate(.5*(_drivetrain.getDistanceL()+_drivetrain.getDistanceR()), turnAngle),-.5,.5);
+    
+    SmartDashboard.putNumber("Turning Speed", turning);
+    System.out.println(_drivetrain.getHeading());
 
     Double SDistance = _drivetrain.getDistanceL();
-    
-    // Clamp is used to lower the max speed
-    _drivetrain.autoDrive(MathUtil.clamp(_PIDController.calculate(.5*(_drivetrain.getDistanceL()+_drivetrain.getDistanceR()), distance),-.5,.5),
-    _PIDController.calculate(_drivetrain.getHeading(), turnAngle));
 
-    _drivetrain.getSignal();
+
+
+    _drivetrain.autoTurnDrive(MathUtil.clamp(_PIDController.calculate(_drivetrain.getHeading(),turnAngle), -0.3, 0.3));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    _drivetrain.autoDrive(0, 0);
+    _drivetrain.autoTurnDrive(0);
   }
 
   // Returns true when the command should end.

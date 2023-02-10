@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTeleop;
+import frc.robot.commands.AutoTurnExperiment;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -73,8 +74,8 @@ public class RobotContainer {
   private void getAutoChooserOptions() {
     _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
 
-    _autoChooser.addOption("Autonomous Test",
-        new AutonomousExperiment(r_drivetrain, 100, 0).andThen(new AutonomousExperiment(r_drivetrain, 0, 180)));
+    _autoChooser.addOption("Autonomous Test", new AutoTurnExperiment(r_drivetrain, 90));
+        //new AutonomousExperiment(r_drivetrain, 200, 0).andThen(new AutoTurnExperiment(r_drivetrain, 180)));
 
     _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -100, 0));
 
@@ -94,7 +95,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
+    
+    // this runs the selected autonomous command☺
     return _autoChooser.getSelected();
   }
 }
