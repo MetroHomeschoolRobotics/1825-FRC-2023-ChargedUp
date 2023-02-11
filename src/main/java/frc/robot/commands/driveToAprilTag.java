@@ -35,7 +35,7 @@ public class driveToAprilTag extends CommandBase {
 
     // Change this to match the name of your camera
 
-    PhotonCamera camera = new PhotonCamera("photonvision");
+    PhotonCamera camera = new PhotonCamera("limelight");
         // PID constants should be tuned per robot
         
         final double LINEAR_P = 0.0000000017;

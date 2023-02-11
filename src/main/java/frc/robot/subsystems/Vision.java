@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.*;
 public class Vision extends SubsystemBase{
     public Vision() {}
-    public PhotonCamera aprilTagCam = new PhotonCamera("aprilTag1");
+    public PhotonCamera aprilTagCam = new PhotonCamera("limelight");
 
     @Override
     public void periodic() {
