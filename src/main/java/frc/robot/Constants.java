@@ -6,39 +6,19 @@ package frc.robot;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
-public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.util.Units;
 
-    //FeedForward Constansts
-    public static final double ksVolts = 0.12027;
-    public static final double kvVoltSecondsPerMeter = 2.2248;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.12052;
+/** Add your docs here. */
+public class Constants {
+    public final double ksVolts = 0.11787;
+    public final double kvVolts = 0.05655;
+    public final double kaVolts = 0.0030613;
+    public final double kpDriveVel = 0.000022962;
 
-    // Example value only - as above, this must be tuned for your drive!
-    public static final double kPDriveVel = 3.5;
+    public final double _trackWidthMeters = Units.inchesToMeters(24);
+    public final DifferentialDriveKinematics _diffDriveKinematics = new DifferentialDriveKinematics(_trackWidthMeters);
 
-    //differentialdrivekinematics
-    //https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#differentialdrivekinematics
-    public static final double kTrackwidthMeters = 0.7651;
-    public static final DifferentialDriveKinematics kDriveKinematics =
-        new DifferentialDriveKinematics(kTrackwidthMeters);
-
-    //Max Trajectory Velocity/Acceleration
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
-
-    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
-    //if tuning these values see https://docs.wpilib.org/en/stable/docs/software/advanced-controls/trajectories/ramsete.html#constructing-the-ramsete-controller-object
-    public static final double kRamseteB = 2;
-    public static final double kRamseteZeta = 0.7;
-  }
+    public final double ramseteB = 2;
+    public final double ramseteZeta = 0.7;
 }

@@ -5,14 +5,23 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 
 public class autoBalance extends CommandBase {
+  // the first working value was (0.005,0,0);second was (0.008,0,0); critical gain = 0.0095
+  private double critGain = 0.01;
+  private double period = .96;
+  private double kp = 0.6*critGain;
+  private double ki = (2*kp/period)*0; // this is the formula multiplyed by zero (to keep the formula in tact)
+  private double kd = 0.125*kp*period;
 
-  private PIDController _PIDController = new PIDController(0.017, 0, 0.0025);
+
+
+  private PIDController _PIDController = new PIDController(kp, ki, kd);
   private Drivetrain drivetrain;
 
   /** Creates a new autoBalance. */
@@ -29,7 +38,13 @@ public class autoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.autoDrive(-(_PIDController.calculate(drivetrain.getPitchAngle())), 0);
+    double angle = drivetrain.getPitchAngle();
+    System.out.println(angle);
+
+
+
+
+    drivetrain.autoDrive(MathUtil.clamp(-(_PIDController.calculate(drivetrain.getPitchAngle())),-0.2,0.2), 0);
   }
 
   // Called once the command ends or is interrupted.
