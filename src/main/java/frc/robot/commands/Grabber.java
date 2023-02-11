@@ -20,17 +20,27 @@ public class Grabber extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    grabberPneumatic.setGrabberDeploy();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     grabberPneumatic.changeGrabberState();
+    if(grabberPneumatic.pressureIsLow()){
+      grabberPneumatic.setCompressor(true);
+    }else{
+      grabberPneumatic.setCompressor(false);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    grabberPneumatic.setGrabberOff();
+    grabberPneumatic.setCompressor(false);
+  }
 
   // Returns true when the command should end.
   @Override

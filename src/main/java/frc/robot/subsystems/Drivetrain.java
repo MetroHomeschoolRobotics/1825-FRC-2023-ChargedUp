@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -115,8 +116,23 @@ public class Drivetrain extends SubsystemBase {
   public double getDistanceL() {
     return motor3.getEncoder().getPosition();
   }
-  
+  public double getAverageEncoderDistance() {
+    return getDistanceR()+getDistanceL()/2;
+  }
+  public DifferentialDriveWheelSpeeds getWheelSpeed(){
+    return new DifferentialDriveWheelSpeeds(motor3.getEncoder().getVelocity(),motor1.getEncoder().getVelocity());
+  }
+  public double getTurnRate(){
+    return gyro.getRate();
+  }
   public void getSignal() {
+    difDrivetrain.feed();
+  }
+
+
+  public void tankDriveVolts(double leftVolts, double rightVolts){
+    motor1.set(rightVolts);
+    motor3.set(leftVolts);
     difDrivetrain.feed();
   }
 
