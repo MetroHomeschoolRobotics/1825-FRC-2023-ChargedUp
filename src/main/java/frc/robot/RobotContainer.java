@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.AutonomousExperiment;
 import frc.robot.commands.autoBalance;
+import frc.robot.commands.driveToAprilTag;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -84,8 +85,9 @@ public class RobotContainer {
 
   private void configureBindings() {
     // make 'B' turn on autoBalance when held
-    m_driverController.b().whileTrue(new autoBalance(r_drivetrain))
-        .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
+    new DriveTeleop(r_drivetrain, m_driverController);
+    m_driverController.b().whileTrue(new autoBalance(r_drivetrain));
+    m_driverController.a().whileTrue(new driveToAprilTag(r_drivetrain));
 
   }
 

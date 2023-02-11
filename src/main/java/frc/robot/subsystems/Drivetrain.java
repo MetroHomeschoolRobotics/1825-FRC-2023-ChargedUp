@@ -152,4 +152,7 @@ public class Drivetrain extends SubsystemBase {
   public void driveMovement(double Xspeed, double Zrotation) {
     difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);
   }
+
+public void arcadeDrive(double forwardSpeed, double rotationSpeed) {
+}
 }
