@@ -76,7 +76,7 @@ public class RobotContainer {
 
     _autoChooser.addOption("Autonomous Test", new AutoTurnExperiment(r_drivetrain, 90));
     
-    _autoChooser.addOption("Linear", new AutonomousExperiment(r_drivetrain, 5, 0));
+    _autoChooser.addOption("Fowards Auto", new AutonomousExperiment(r_drivetrain, 5, 0));
 
     _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -5, 0));
 
