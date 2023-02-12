@@ -12,12 +12,18 @@ import frc.robot.subsystems.Drivetrain;
 
 public class AutonomousExperiment extends CommandBase {
 
+  private double critGain = 0.2;  // multiply this for faster speeds if needed. (it will ocillate more when tipped)
+  private double period = 0.96;
+  private double kp = 0.6*critGain;
+  private double ki = (2*kp/period)*0; // this is the formula multiplied by zero (to keep the formula intact)
+  private double kd = 0.125*kp*period*0;
   private Drivetrain _drivetrain;           //outputs a number of distance          outputs how fast you're moving away
-//                                            Probably must be below 1.  We didn't seem to need ki.  If kd is too high, it oscillate
-  private PIDController _PIDController = new PIDController(0.0000000017, 0, .0025);
+//                                            Probably must be below 1.  We didn't seem to need ki.  If kd is too high, it oscillates
+  private PIDController _PIDController = new PIDController(0.1, 0, 0);
   // motor output = kp x error    motor output = ki x errorSum
   double distance;
   double turnAngle;
+
 
 
   /** Creates a new AutonomousExperiment. */
@@ -27,6 +33,8 @@ public class AutonomousExperiment extends CommandBase {
     turnAngle = _turnAngle;
     _drivetrain = drivetrain;
     addRequirements(drivetrain);
+    _PIDController.setSetpoint(distance);
+
   }
 
 
@@ -37,7 +45,7 @@ public class AutonomousExperiment extends CommandBase {
   public void initialize() {
     _drivetrain.resetHeading();
     _drivetrain.resetEncoders();
-    _PIDController.setTolerance(2,5);
+    _PIDController.setTolerance(1,5);
     _PIDController.setIntegratorRange(-.5, .5);
   }
 
@@ -54,17 +62,22 @@ public class AutonomousExperiment extends CommandBase {
     _PIDController.calculate(_drivetrain.getHeading(), turnAngle));
 
     _drivetrain.getSignal();
+    System.out.println(SDistance);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     _drivetrain.autoDrive(0, 0);
+    System.out.println("endFunctionCalled");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println(_PIDController.atSetpoint());
+    System.out.println(_PIDController.getSetpoint());
+
     return _PIDController.atSetpoint();
   }
 }

@@ -13,9 +13,15 @@ import edu.wpi.first.math.MathUtil;
 
 public class AutoTurnExperiment extends CommandBase {
 
+  private double critGain = 0.0005;  // multiply this for faster speeds if needed. (it will ocillate more when tipped)
+  private double period = 0.88;
+  private double kp = 0.6*critGain;
+  private double ki = (2*kp/period)*0; // this is the formula multiplied by zero (to keep the formula intact)
+  private double kd = 0.125*kp*period;
+
   private Drivetrain _drivetrain;           //outputs a number of distance          outputs how fast you're moving away
 //                                            Probably must be below 1
-  private PIDController _PIDController = new PIDController(0.0089, 0, 0.053);
+  private PIDController _PIDController = new PIDController(kp, ki, kd);
 
 
   Double turnAngle;

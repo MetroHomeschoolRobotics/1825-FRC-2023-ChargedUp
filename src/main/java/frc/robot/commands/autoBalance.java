@@ -12,11 +12,16 @@ import frc.robot.subsystems.Drivetrain;
 
 
 public class autoBalance extends CommandBase {
-  // the first working value was (0.005,0,0);second was (0.008,0,0); critical gain = 0.0095
-  private double critGain = 0.01;
-  private double period = .96;
+  /*
+   * To find the critical gain, find the kp (without the others) with a constant ocillation
+   * To find the period, count the peak-to-peak value and multiply it by 20ms (which is the runs for 'execute') / 1000 (for seconds)
+   * For Ki, use this equation: 2*Kp/Period
+   * For Kd, use this equation: 0.125*Kp*period
+   */
+  private double critGain = 0.01;  // multiply this for faster speeds if needed. (it will ocillate more when tipped)
+  private double period = 0.96;
   private double kp = 0.6*critGain;
-  private double ki = (2*kp/period)*0; // this is the formula multiplyed by zero (to keep the formula in tact)
+  private double ki = (2*kp/period)*0; // this is the formula multiplied by zero (to keep the formula intact)
   private double kd = 0.125*kp*period;
 
 
@@ -44,7 +49,7 @@ public class autoBalance extends CommandBase {
 
 
 
-    drivetrain.autoDrive(MathUtil.clamp(-(_PIDController.calculate(drivetrain.getPitchAngle())),-0.2,0.2), 0);
+    drivetrain.autoDrive(MathUtil.clamp(-(_PIDController.calculate(drivetrain.getPitchAngle())),-0.4,0.4), 0);
   }
 
   // Called once the command ends or is interrupted.
