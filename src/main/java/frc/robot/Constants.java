@@ -9,14 +9,14 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class Constants {
-    public final double ksVolts = 0.11787;
-    public final double kvVolts = 0.05655;
-    public final double kaVolts = 0.0030613;
-    public final double kpDriveVel = 0.000022962;
+    public final static double ksVolts = 0.11787;
+    public final static double kvVolts = 0.05655;
+    public final static double kaVolts = 0.0030613;
+    public final static double kpDriveVel = 0.000022962;
 
-    public final double _trackWidthMeters = Units.inchesToMeters(24);
-    public final DifferentialDriveKinematics _diffDriveKinematics = new DifferentialDriveKinematics(_trackWidthMeters);
+    public final static double _trackWidthMeters = Units.inchesToMeters(24);
+    public final static DifferentialDriveKinematics _diffDriveKinematics = new DifferentialDriveKinematics(_trackWidthMeters);
 
-    public final double ramseteB = 2;
-    public final double ramseteZeta = 0.7;
+    public final static double ramseteB = 2;
+    public final static double ramseteZeta = 0.7;
 }

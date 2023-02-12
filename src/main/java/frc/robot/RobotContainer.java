@@ -32,7 +32,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(0);
 
-  private final Drivetrain r_drivetrain = new Drivetrain();
+  public static final Drivetrain r_drivetrain = new Drivetrain();
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
@@ -75,9 +75,10 @@ public class RobotContainer {
     _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
 
     _autoChooser.addOption("Autonomous Test", new AutoTurnExperiment(r_drivetrain, 90));
-        //new AutonomousExperiment(r_drivetrain, 200, 0).andThen(new AutoTurnExperiment(r_drivetrain, 180)));
+    
+    _autoChooser.addOption("Linear", new AutonomousExperiment(r_drivetrain, 5, 0));
 
-    _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -100, 0));
+    _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -5, 0));
 
     SmartDashboard.putData(_autoChooser);
   }
