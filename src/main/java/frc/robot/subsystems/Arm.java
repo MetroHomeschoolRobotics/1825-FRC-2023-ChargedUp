@@ -32,6 +32,10 @@ public class Arm extends SubsystemBase {
     return motor1.getEncoder().getVelocity();
   }
 
+  public void setEncoders(double value){
+    motor1.getEncoder().setPosition(value);
+  }
+
   public void moveMotor(double speed){
     motor1.set(speed);
   }
