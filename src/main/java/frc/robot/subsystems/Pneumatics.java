@@ -34,6 +34,10 @@ public class Pneumatics extends SubsystemBase {
   public Boolean getGrabberState() {
     return grabberPneumatic1.isRevSolenoidDisabled();
   }
+  public Boolean getCompressorState() {
+    return compressor.isEnabled();
+  }
+
   public void changeGrabberState() {
     grabberPneumatic1.toggle();
     grabberPneumatic2.toggle();
@@ -42,11 +46,11 @@ public class Pneumatics extends SubsystemBase {
     grabberPneumatic1.set(Value.kOff);
     grabberPneumatic2.set(Value.kOff);
   }
-  public void setGrabberRetract(){
+  public void setGrabberClose(){
     grabberPneumatic1.set(Value.kReverse);
     grabberPneumatic2.set(Value.kReverse);
   }
-  public void setGrabberDeploy(){
+  public void setGrabberOpen(){
     grabberPneumatic1.set(Value.kForward);
     grabberPneumatic2.set(Value.kForward);
   }

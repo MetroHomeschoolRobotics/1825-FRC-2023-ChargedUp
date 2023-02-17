@@ -14,7 +14,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Pneumatics;
 import frc.robot.commands.DriveTeleop;
+import frc.robot.commands.Grabber;
+import frc.robot.commands.ToggleCompressor;
 import frc.robot.commands.AutoTurnExperiment;
 
 /**
@@ -32,6 +35,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(0);
 
+  public static final Pneumatics pneumatics = new Pneumatics();
   public static final Drivetrain r_drivetrain = new Drivetrain();
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
 
@@ -76,7 +80,7 @@ public class RobotContainer {
 
     _autoChooser.addOption("Autonomous Test", new AutoTurnExperiment(r_drivetrain, 90));
     
-    _autoChooser.addOption("Fowards Auto", new AutonomousExperiment(r_drivetrain, 5, 0));
+    _autoChooser.addOption("Fowards Auto", new AutonomousExperiment(r_drivetrain, 5, 0).andThen(new AutonomousExperiment(r_drivetrain, -5, 0)));
 
     _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -5, 0));
 
@@ -87,6 +91,10 @@ public class RobotContainer {
     // make 'B' turn on autoBalance when held
     m_driverController.b().whileTrue(new autoBalance(r_drivetrain))
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
+
+    m_driverController.start().onTrue(new ToggleCompressor(pneumatics));
+
+    m_driverController.x().onTrue(new Grabber(pneumatics));
 
   }
 

@@ -19,7 +19,7 @@ public class AutonomousExperiment extends CommandBase {
   private double kd = 0.125*kp*period*0;
   private Drivetrain _drivetrain;           //outputs a number of distance          outputs how fast you're moving away
 //                                            Probably must be below 1.  We didn't seem to need ki.  If kd is too high, it oscillates
-  private PIDController _PIDController = new PIDController(0.1, 0, 0);
+  private PIDController _PIDController = new PIDController(0.5, 0, 0);
   // motor output = kp x error    motor output = ki x errorSum
   double distance;
   double turnAngle;
@@ -45,7 +45,7 @@ public class AutonomousExperiment extends CommandBase {
   public void initialize() {
     _drivetrain.resetHeading();
     _drivetrain.resetEncoders();
-    _PIDController.setTolerance(1,5);
+    _PIDController.setTolerance(2,5);
     _PIDController.setIntegratorRange(-.5, .5);
   }
 
@@ -53,7 +53,7 @@ public class AutonomousExperiment extends CommandBase {
   @Override
   public void execute() {
     Double turning = _PIDController.calculate(.5*(_drivetrain.getDistanceL()+_drivetrain.getDistanceR()),distance);
-    Double forward = MathUtil.clamp(_PIDController.calculate(.5*(_drivetrain.getDistanceL()+_drivetrain.getDistanceR()), distance),-.5,.5);
+    Double forward = MathUtil.clamp(_PIDController.calculate(.5*(_drivetrain.getDistanceL()+_drivetrain.getDistanceR()), distance),-.3,.3);
 
     Double SDistance = _drivetrain.getDistanceL();
     
@@ -62,22 +62,17 @@ public class AutonomousExperiment extends CommandBase {
     _PIDController.calculate(_drivetrain.getHeading(), turnAngle));
 
     _drivetrain.getSignal();
-    System.out.println(SDistance);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     _drivetrain.autoDrive(0, 0);
-    System.out.println("endFunctionCalled");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    System.out.println(_PIDController.atSetpoint());
-    System.out.println(_PIDController.getSetpoint());
-
     return _PIDController.atSetpoint();
   }
 }
