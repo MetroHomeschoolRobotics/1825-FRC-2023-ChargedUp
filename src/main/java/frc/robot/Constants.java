@@ -5,7 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import frc.TrajectoryHelper;
 
 /** Add your docs here. */
 public class Constants {
@@ -19,4 +21,8 @@ public class Constants {
 
     public final static double ramseteB = 2;
     public final static double ramseteZeta = 0.7;
+
+
+    public static Trajectory CurveThenBalance = TrajectoryHelper.generateFromPathPlanner("New New Path");
+    public static Trajectory goStraight = TrajectoryHelper.generateFromPathPlanner("New Path");
 }

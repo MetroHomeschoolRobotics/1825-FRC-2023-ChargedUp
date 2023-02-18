@@ -6,6 +6,12 @@ package frc.robot;
 
 import frc.robot.commands.AutonomousExperiment;
 import frc.robot.commands.autoBalance;
+
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTeleop;
+import frc.robot.commands.ResetOdometry;
+import frc.TrajectoryHelper;
 import frc.robot.commands.AutoTurnExperiment;
 
 /**
@@ -80,6 +88,8 @@ public class RobotContainer {
 
     _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -5, 0));
 
+    _autoChooser.addOption("TrajectoryTest", new  ResetOdometry(Constants.CurveThenBalance.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.CurveThenBalance)).andThen(new autoBalance(r_drivetrain)));
+
     SmartDashboard.putData(_autoChooser);
   }
 
@@ -88,6 +98,7 @@ public class RobotContainer {
     m_driverController.b().whileTrue(new autoBalance(r_drivetrain))
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
 
+    m_driverController.a().onTrue(new  ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
   }
 
   /**
