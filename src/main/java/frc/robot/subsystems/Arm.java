@@ -11,29 +11,52 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
-  CANSparkMax motor1 = new CANSparkMax(5, MotorType.kBrushless);
+  CANSparkMax angleMotor = new CANSparkMax(5, MotorType.kBrushless);
+  CANSparkMax telescopingMotor = new CANSparkMax(6, MotorType.kBrushless);
   /** Creates a new Arm. */
-  public Arm() {}
+  public Arm() {
+    angleMotor.setInverted(true);
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Arm Motor Position", motor1.getEncoder().getPosition());
+    SmartDashboard.putNumber("Arm Motor Position", angleMotor.getEncoder().getPosition());
   }
 
-  public void resetEncoders(){
-    motor1.getEncoder().setPosition(0);
+  public void resetAngleEncoders(){
+    angleMotor.getEncoder().setPosition(0);
   }
 
-  public double getDistance(){
-    return motor1.getEncoder().getPosition();
+  public double getAngleDistance(){
+    return angleMotor.getEncoder().getPosition();
   }
-  public double getSpeed(){
-    return motor1.getEncoder().getVelocity();
-  }
-
-  public void moveMotor(double speed){
-    motor1.set(speed);
+  public double getAngleSpeed(){
+    return angleMotor.getEncoder().getVelocity();
   }
 
+  public void setAngleEncoders(double value){
+    angleMotor.getEncoder().setPosition(value);
+  }
+
+  public void moveAngleMotor(double speed){
+    angleMotor.set(speed);
+  }
+
+
+  public void resetTeleEncoders(){
+    telescopingMotor.getEncoder().setPosition(0);
+  }
+  public double getTeleDistance(){
+    return telescopingMotor.getEncoder().getPosition();
+  }
+  public double getTeleSpeed(){
+    return telescopingMotor.getEncoder().getVelocity();
+  }
+  public void setTeleEncoders(double value){
+    telescopingMotor.getEncoder().setPosition(value);
+  }
+  public void moveTeleMotor(double speed){
+    angleMotor.set(speed);
+  }
 }

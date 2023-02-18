@@ -5,37 +5,40 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Pneumatics;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.Arm;
 
-public class Grabber extends CommandBase {
+public class ArmMovement extends CommandBase {
 
-  private final Pneumatics grabberPneumatic;
+  private Arm arm;
+  private CommandXboxController controller;
+  private double value;
 
-  /** Creates a new Grabber. */
-  public Grabber(Pneumatics pneumatic) {
+  /** Creates a new ArmMovement. */
+  public ArmMovement(CommandXboxController _controller, Arm _arm, double encoderValue) {
+    arm = _arm;
+    value = encoderValue;
+    controller = _controller;
+    addRequirements(_arm);
     // Use addRequirements() here to declare subsystem dependencies.
-    grabberPneumatic = pneumatic;
-    addRequirements(pneumatic);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  grabberPneumatic.changeGrabberState();
+    arm.resetAngleEncoders();
+    arm.setAngleEncoders(value);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    arm.moveAngleMotor(controller.getRightY());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    grabberPneumatic.setGrabberOff();
-    grabberPneumatic.setCompressor(false);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
