@@ -5,19 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Arm;
 
 public class ArmMovement extends CommandBase {
 
   private Arm arm;
+  private CommandXboxController controller;
   private double value;
-  private double speed;
 
   /** Creates a new ArmMovement. */
-  public ArmMovement(Arm _arm, double _value,double _speed) {
+  public ArmMovement(CommandXboxController _controller, Arm _arm, double encoderValue) {
     arm = _arm;
-    value = _value;
-    speed = _speed;
+    value = encoderValue;
+    controller = _controller;
     addRequirements(_arm);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -25,14 +26,14 @@ public class ArmMovement extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    arm.resetEncoders();
-    arm.setEncoders(value);
+    arm.resetAngleEncoders();
+    arm.setAngleEncoders(value);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.moveMotor(speed);
+    arm.moveAngleMotor(controller.getRightY());
   }
 
   // Called once the command ends or is interrupted.
