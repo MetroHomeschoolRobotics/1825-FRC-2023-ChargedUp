@@ -9,6 +9,7 @@ import frc.robot.commands.autoBalance;
 
 import java.util.List;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,8 +22,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Pneumatics;
 import frc.robot.commands.DriveTeleop;
+import frc.robot.commands.DriveToApril;
 import frc.robot.commands.ResetOdometry;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
@@ -50,6 +53,7 @@ public class RobotContainer {
   public static final Drivetrain r_drivetrain = new Drivetrain();
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
   private final ArmMovement armRotation = new ArmMovement(m_driverController, arm, 0);
+  private final Limelight limelight = new Limelight();
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
 
@@ -97,7 +101,7 @@ public class RobotContainer {
 
     _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -5, 0));
 
-    _autoChooser.addOption("TrajectoryTest", new  ResetOdometry(Constants.CurveThenBalance.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.CurveThenBalance)).andThen(new autoBalance(r_drivetrain)));
+    _autoChooser.addOption("TrajectoryTest", new ResetOdometry(Constants.CurveThenBalance.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.CurveThenBalance)).andThen(new autoBalance(r_drivetrain)));
 
     SmartDashboard.putData(_autoChooser);
   }
@@ -107,10 +111,13 @@ public class RobotContainer {
     m_driverController.b().whileTrue(new autoBalance(r_drivetrain))
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
 
-    m_driverController.a().onTrue(new  ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
+    m_driverController.a().onTrue(new ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
+    
     m_driverController.start().onTrue(new ToggleCompressor(pneumatics));
 
     m_driverController.x().onTrue(new Grabber(pneumatics));
+
+    m_driverController.y().whileTrue(new DriveToApril(r_drivetrain, limelight));
 
   }
 
