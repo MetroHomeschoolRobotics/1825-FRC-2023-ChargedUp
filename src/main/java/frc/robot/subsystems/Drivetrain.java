@@ -54,6 +54,8 @@ public class Drivetrain extends SubsystemBase {
     motor1.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
     motor3.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
 
+    motor1.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
+    motor3.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
     // resets the gyro
     gyro.reset();
     gyro.calibrate();
