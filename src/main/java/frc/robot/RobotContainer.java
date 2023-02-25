@@ -100,9 +100,9 @@ public class RobotContainer {
     
     _autoChooser.addOption("Fowards Auto", new AutonomousExperiment(r_drivetrain, 5, 0).andThen(new AutonomousExperiment(r_drivetrain, -5, 0)));
 
-    _autoChooser.addOption("Backwards Auto", new AutonomousExperiment(r_drivetrain, -5, 0));
+    _autoChooser.addOption("Straight6meters", new ResetOdometry(Constants.Straight6meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight6meters)));
 
-    _autoChooser.addOption("TrajectoryTest", new ResetOdometry(Constants.CurveThenBalance.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.CurveThenBalance)).andThen(new autoBalance(r_drivetrain)));
+    _autoChooser.addOption("Straight5meters", new ResetOdometry(Constants.Straight5meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight5meters)));
 
     SmartDashboard.putData(_autoChooser);
   }
@@ -112,7 +112,7 @@ public class RobotContainer {
     m_driverController.b().whileTrue(new autoBalance(r_drivetrain))
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
 
-    m_driverController.a().onTrue(new ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
+    //m_driverController.a().onTrue(new ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
     
     //m_driverController.start().onTrue(new ToggleCompressor(pneumatics));
 
