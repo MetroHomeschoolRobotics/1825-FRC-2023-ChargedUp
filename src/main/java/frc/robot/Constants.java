@@ -24,6 +24,6 @@ public class Constants {
 
 
     public static Trajectory CurveThenBalance = TrajectoryHelper.generateFromPathPlanner("CurvePath");
-    public static Trajectory Straight5meters = TrajectoryHelper.generateFromPathPlanner("New New Path");
+    public static Trajectory Straight5meters = TrajectoryHelper.generateFromPathPlanner("New Path");
     public static Trajectory Straight6meters = TrajectoryHelper.generateFromPathPlanner("Straight6meters");
 }
