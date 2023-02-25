@@ -117,7 +117,7 @@ public class RobotContainer {
     //m_driverController.start().onTrue(new ToggleCompressor(pneumatics));
 
     m_driverController.rightBumper().onTrue(new Grabber(pneumatics));
-    m_driverController.x().onTrue(new TurnOnCameraLight(limelight));
+    m_driverController.x().whileTrue(new TurnOnCameraLight(limelight));
 
     m_driverController.y().whileTrue(new DriveToApril(r_drivetrain, limelight));
 
