@@ -104,6 +104,8 @@ public class RobotContainer {
 
     _autoChooser.addOption("Straight5meters", new ResetOdometry(Constants.Straight5meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight5meters)));
 
+    _autoChooser.addOption("Straight4meters", new ResetOdometry(Constants.Straight4meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight4meters)));
+
     SmartDashboard.putData(_autoChooser);
   }
 
