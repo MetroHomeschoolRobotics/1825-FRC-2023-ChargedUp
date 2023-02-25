@@ -36,7 +36,7 @@ public class DriveTeleop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turning = xboxController.getLeftX()*0.3;
+    turning = xboxController.getLeftX()*0.9;
     forward = -xboxController.getLeftY();
     _drivetrain.driveMovement(forward, turning);
     SmartDashboard.putNumber("forward", forward);

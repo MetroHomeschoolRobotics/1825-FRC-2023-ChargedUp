@@ -46,10 +46,10 @@ public class DriveToApril extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(-limelight.getTargetYaw());
+    //System.out.println(-limelight.getTargetYaw());
 
     if(limelight.hasTargests()){
-      drivetrain.autoTurnDrive(-MathUtil.clamp(turnPID.calculate(limelight.getTargetYaw(),0), -0.1, 0.1));
+      drivetrain.autoTurnDrive(-turnPID.calculate(drivetrain.getHeading(),limelight.getTargetSkew()));
     }
 
 
