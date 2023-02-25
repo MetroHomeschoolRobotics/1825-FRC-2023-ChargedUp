@@ -31,8 +31,7 @@ public class Drivetrain extends SubsystemBase {
 
   // this information could be of use in the future for distance tracking
   private static final double wheelRadiusInches = 3;
-  private static final double gearRatio = 20;//8.46
-
+  private static final double gearRatio = 10.71;//8.46
 
   private DifferentialDrive difDrivetrain = new DifferentialDrive(motor1, motor3);
   private final DifferentialDriveOdometry odometry;
