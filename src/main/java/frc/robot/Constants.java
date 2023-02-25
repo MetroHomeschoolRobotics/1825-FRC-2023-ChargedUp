@@ -23,7 +23,7 @@ public class Constants {
     public final static double ramseteZeta = 0.7;
 
 
-    public static Trajectory CurveThenBalance = TrajectoryHelper.generateFromPathPlanner("Curvethenbalance");
-    public static Trajectory Straight5meters = TrajectoryHelper.generateFromPathPlanner("Straight5meters");
+    public static Trajectory CurveThenBalance = TrajectoryHelper.generateFromPathPlanner("CurvePath");
+    public static Trajectory Straight5meters = TrajectoryHelper.generateFromPathPlanner("New New Path");
     public static Trajectory Straight6meters = TrajectoryHelper.generateFromPathPlanner("Straight6meters");
 }
