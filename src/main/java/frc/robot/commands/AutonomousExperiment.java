@@ -19,7 +19,7 @@ public class AutonomousExperiment extends CommandBase {
   private double kd = 0.125*kp*period*0;
   private Drivetrain _drivetrain;           //outputs a number of distance          outputs how fast you're moving away
 //                                            Probably must be below 1.  We didn't seem to need ki.  If kd is too high, it oscillates
-  private PIDController _PIDController = new PIDController(0.5, 0, 0);
+  private PIDController _PIDController = new PIDController(0.01, 0, 0);//.5, 0, 0
   // motor output = kp x error    motor output = ki x errorSum
   double distance;
   double turnAngle;
