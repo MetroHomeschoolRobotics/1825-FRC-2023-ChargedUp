@@ -23,11 +23,13 @@ public class DriveToApril extends CommandBase {
   private static double kd = 0;
   private PIDController pidR = new PIDController(Constants.kpDriveVel, 0, 0);
   private PIDController pidL = new PIDController(Constants.kpDriveVel, 0, 0);
-  private PIDController turnPID = new PIDController(0.05, ki, kd);
+  private PIDController turnPID = new PIDController(0.005, ki, kd);
 
   private static double distance;
+  private static double turnSpeed;
   private static double speedR;
   private static double speedL;
+  private static double TY;
   /** Creates a new AprilTag. */
   public DriveToApril(Drivetrain _Drivetrain, Limelight _limelight) {
     drivetrain = _Drivetrain;
@@ -41,6 +43,7 @@ public class DriveToApril extends CommandBase {
   @Override
   public void initialize() {
     distance = limelight.getNodeAprilDistance()-1;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,10 +52,16 @@ public class DriveToApril extends CommandBase {
     //System.out.println(-limelight.getTargetYaw());
 
     if(limelight.hasTargests()){
-      drivetrain.autoTurnDrive(-turnPID.calculate(drivetrain.getHeading(),limelight.getTargetSkew()));
+      turnSpeed = turnPID.calculate(limelight.getTargetYaw(), 2.7);
+      System.out.println(limelight.getTargetYaw());
     }
+    else{
+      turnSpeed = 0;
+      drivetrain.getSignal();
+    }
+    
 
-
+    drivetrain.autoTurnDrive(turnSpeed);
     // speedR = -MathUtil.clamp(pidR.calculate(drivetrain.getAverageEncoderDistance(), distance), -0.1, 0.1);
     // speedL = -MathUtil.clamp(pidL.calculate(drivetrain.getAverageEncoderDistance(), distance), -0.1, 0.1);
     // drivetrain.tankDriveVolts(speedL, speedR);
@@ -61,8 +70,7 @@ public class DriveToApril extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.tankDriveVolts(0, 0);
-  }
+    drivetrain.tankDriveVolts(0, 0);  }
 
   // Returns true when the command should end.
   @Override

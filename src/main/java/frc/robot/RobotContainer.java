@@ -27,6 +27,7 @@ import frc.robot.subsystems.Pneumatics;
 import frc.robot.commands.DriveTeleop;
 import frc.robot.commands.DriveToApril;
 import frc.robot.commands.ResetOdometry;
+import frc.robot.commands.TestGearRatio;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
 import frc.robot.commands.ToggleCompressor;
@@ -114,8 +115,9 @@ public class RobotContainer {
 
     //m_driverController.a().onTrue(new ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
     
-    //m_driverController.start().onTrue(new ToggleCompressor(pneumatics));
+    m_driverController.back().onTrue(new ToggleCompressor(pneumatics));
 
+    m_driverController.leftBumper().onTrue(new TestGearRatio(r_drivetrain));
     m_driverController.rightBumper().onTrue(new Grabber(pneumatics));
     m_driverController.x().whileTrue(new TurnOnCameraLight(limelight));
 

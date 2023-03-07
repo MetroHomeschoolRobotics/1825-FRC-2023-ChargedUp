@@ -4,40 +4,34 @@
 
 package frc.robot.commands;
 
-import org.photonvision.common.hardware.VisionLEDMode;
-
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Drivetrain;
 
-public class TurnOnCameraLight extends CommandBase {
-  private Limelight limelight;
-  /** Creates a new TurnOnCameraLight. */
-  public TurnOnCameraLight(Limelight _limelight) {
-    limelight = _limelight;
-    addRequirements(_limelight);
-
+public class TestGearRatio extends CommandBase {
+  private Drivetrain drivetrain;
+  /** Creates a new TestGearRatio. */
+  public TestGearRatio(Drivetrain _drivetrain) {
+    addRequirements(_drivetrain);
+    drivetrain = _drivetrain;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    drivetrain.resetEncoders();
   }
-  
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(limelight.getLightState());
-    // if(limelight.getLightState() == VisionLEDMode.kOff){
-    //   limelight.LEDOn();
-    // }else if(limelight.getLightState() == VisionLEDMode.kOn){
-    //   limelight.LEDOff();
-    // }else if(limelight.getLightState() == VisionLEDMode.kDefault){
-    //   limelight.LEDOn();
-    // }
-    limelight.LEDOff();
-}
+    if(drivetrain.getAverageEncoderDistance()<(Units.inchesToMeters(3)*2*Math.PI)){
+      drivetrain.autoDrive(0.1, 0);
+      System.out.println(drivetrain.getAverageEncoderDistance());
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
