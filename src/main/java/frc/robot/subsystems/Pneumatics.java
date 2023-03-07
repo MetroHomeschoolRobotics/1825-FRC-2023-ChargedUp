@@ -25,14 +25,13 @@ public class Pneumatics extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.getBoolean("Grabber Open", getGrabberState());
-
+    
   }
 
 
   
-  public Boolean getGrabberState() {
-    return grabberPneumatic1.isRevSolenoidDisabled();
+  public DoubleSolenoid.Value getGrabberState() {
+    return grabberPneumatic1.get();
   }
   public Boolean getCompressorState() {
     return compressor.isEnabled();
