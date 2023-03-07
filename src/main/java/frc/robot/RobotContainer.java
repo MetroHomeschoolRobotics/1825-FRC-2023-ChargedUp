@@ -30,6 +30,9 @@ import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.TestGearRatio;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
+import frc.robot.commands.GrabberOpen;
+import frc.robot.commands.GrabberClose;
+
 import frc.robot.commands.ToggleCompressor;
 import frc.robot.commands.TurnOnCameraLight;
 import frc.robot.commands.ArmMovement;
@@ -105,6 +108,11 @@ public class RobotContainer {
 
     _autoChooser.addOption("Straight5meters", new ResetOdometry(Constants.Straight5meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight5meters)));
 
+    _autoChooser.addOption("Straight4meters", new ResetOdometry(Constants.Straight4meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight4meters)));
+
+    _autoChooser.addOption("ForwardthenBack", new ResetOdometry(Constants.ForwardthenBack.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.ForwardthenBack)));
+    
+    _autoChooser.addOption("Turn", new ResetOdometry(Constants.Turn.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Turn)));
     SmartDashboard.putData(_autoChooser);
   }
 
@@ -117,8 +125,8 @@ public class RobotContainer {
     
     m_driverController.back().onTrue(new ToggleCompressor(pneumatics));
 
-    m_driverController.leftBumper().onTrue(new TestGearRatio(r_drivetrain));
-    m_driverController.rightBumper().onTrue(new Grabber(pneumatics));
+    m_driverController.rightBumper().onTrue(new GrabberOpen(pneumatics));
+    m_driverController.leftBumper().onTrue(new GrabberClose(pneumatics));
     m_driverController.x().whileTrue(new TurnOnCameraLight(limelight));
 
     m_driverController.y().whileTrue(new DriveToApril(r_drivetrain, limelight));

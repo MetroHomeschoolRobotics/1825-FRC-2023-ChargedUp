@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.544359374433035,
-        "y": 4.609347218694437
+        "x": 2.3582677165354333,
+        "y": 4.709550419100839
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.546391378497043,
-        "y": 4.609347218694437
+        "x": 3.288726006023441,
+        "y": 4.695235676185638
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -24,12 +24,12 @@
     },
     {
       "anchorPoint": {
-        "x": 8.54,
-        "y": 4.61
+        "x": 6.967614935229871,
+        "y": 4.752494647846439
       },
       "prevControl": {
-        "x": 7.953095540476795,
-        "y": 4.61
+        "x": 5.779491273268261,
+        "y": 4.752494647846439
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -47,50 +47,6 @@
   ],
   "maxVelocity": 2.0,
   "maxAcceleration": null,
-  "isReversed": false,
-  "markers": [
-    {
-      "position": 1.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "event2"
-      ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "event",
-        "turn to ramp"
-      ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    }
-  ]
+  "isReversed": null,
+  "markers": []
 }

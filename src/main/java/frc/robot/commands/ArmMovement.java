@@ -34,14 +34,14 @@ public class ArmMovement extends CommandBase {
   @Override
   public void execute() {
     arm.moveAngleMotor(controller.getRightY());
-    // telescoping the arm 
-    //if(controller.getRightTriggerAxis()>0.01){
-    //  arm.moveTeleMotor(controller.getRightTriggerAxis());
-    //}else if(controller.getLeftTriggerAxis()>0.01){
-    //  arm.moveTeleMotor(-(controller.getLeftTriggerAxis()));
-    //}else{
-    //  arm.moveTeleMotor(0);
-    //}
+    // telescoping the arm //Great job on the comments :) A+ 
+    if(controller.getRightTriggerAxis()>0.01){
+      arm.moveTeleMotor(controller.getRightTriggerAxis());
+    }else if(controller.getLeftTriggerAxis()>0.01){
+      arm.moveTeleMotor(-(controller.getLeftTriggerAxis()));
+    }else{
+      arm.moveTeleMotor(0);
+    }
   }
 
   // Called once the command ends or is interrupted.

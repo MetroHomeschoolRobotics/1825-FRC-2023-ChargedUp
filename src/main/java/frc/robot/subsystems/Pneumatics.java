@@ -16,7 +16,7 @@ public class Pneumatics extends SubsystemBase {
 
   private Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
   private DoubleSolenoid grabberPneumatic1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
-  private DoubleSolenoid grabberPneumatic2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4);
+  private DoubleSolenoid grabberPneumatic2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4); // TODO Should be 2 and 3 -George :) COMMENTS ARE AWESOME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
   /** Creates a new Grabber. */

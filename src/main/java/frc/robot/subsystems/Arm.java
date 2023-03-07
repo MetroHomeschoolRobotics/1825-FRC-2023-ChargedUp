@@ -40,7 +40,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void moveAngleMotor(double speed){
-    angleMotor.set(speed);
+    angleMotor.set(speed / 2); //Changed this to half speed to not rip the arm off - Joseph
   }
 
 
@@ -57,6 +57,6 @@ public class Arm extends SubsystemBase {
     telescopingMotor.getEncoder().setPosition(value);
   }
   public void moveTeleMotor(double speed){
-    angleMotor.set(speed);
+    telescopingMotor.set(speed); //Changed this motor from anglemotor to telescoping motor - Joseph
   }
 }

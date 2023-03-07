@@ -31,7 +31,7 @@ public class Drivetrain extends SubsystemBase {
 
   // this information could be of use in the future for distance tracking
   private static final double wheelRadiusInches = 3;
-  private static final double gearRatio = 10.71;//8.46
+  private static final double gearRatio = 10.71;//10.71
 
   private DifferentialDrive difDrivetrain = new DifferentialDrive(motor1, motor3);
   private final DifferentialDriveOdometry odometry;
@@ -75,6 +75,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Distance", motor3.getEncoder().getPosition());
     SmartDashboard.putNumber("Velocity", motor3.getEncoder().getVelocity());
     SmartDashboard.putNumber("Heading", gyro.getAngle());
+    System.out.println(getPosition());
     SmartDashboard.putData(gyro);
     SmartDashboard.putNumber("Rotate Angle", gyro.getYaw());
 
