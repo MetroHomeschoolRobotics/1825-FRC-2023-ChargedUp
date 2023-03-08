@@ -56,6 +56,9 @@ public class Limelight extends SubsystemBase {
   public void setToShape(){
     limelight.setPipelineIndex(2);
   }
+  public int getPipeline(){
+    return limelight.getPipelineIndex();
+  }
 
   public VisionLEDMode getLightState(){
     return limelight.getLEDMode();
