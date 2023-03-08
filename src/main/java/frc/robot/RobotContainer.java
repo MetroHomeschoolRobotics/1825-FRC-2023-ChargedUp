@@ -30,8 +30,6 @@ import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.TestGearRatio;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
-import frc.robot.commands.GrabberOpen;
-import frc.robot.commands.GrabberClose;
 
 import frc.robot.commands.ToggleCompressor;
 import frc.robot.commands.TurnOnCameraLight;
@@ -56,9 +54,10 @@ public class RobotContainer {
   public static final Pneumatics pneumatics = new Pneumatics();
   private static final Arm arm = new Arm();
   public static final Drivetrain r_drivetrain = new Drivetrain();
+  private final Limelight limelight = new Limelight(r_drivetrain);
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
   private final ArmMovement armRotation = new ArmMovement(m_driverController, arm, 0);
-  private final Limelight limelight = new Limelight(r_drivetrain);
+
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
 
@@ -123,9 +122,9 @@ public class RobotContainer {
 
     //m_driverController.a().onTrue(new ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
     
-    m_driverController.back().onTrue(new ToggleCompressor(pneumatics));
+    m_driverController.back().toggleOnTrue(new ToggleCompressor(pneumatics));
 
-    m_driverController.rightBumper().onTrue(new Grabber(pneumatics));
+    m_driverController.rightBumper().whileTrue(new Grabber(pneumatics));
     m_driverController.x().whileTrue(new TurnOnCameraLight(limelight));
 
     m_driverController.y().whileTrue(new DriveToApril(r_drivetrain, limelight));

@@ -54,8 +54,7 @@ public class DriveToApril extends CommandBase {
     if(limelight.hasTargests()){
       turnSpeed = turnPID.calculate(limelight.getTargetYaw(), 2.7);
       System.out.println(limelight.getTargetYaw());
-    }
-    else{
+    }else{
       turnSpeed = 0;
       drivetrain.getSignal();
     }

@@ -27,7 +27,7 @@ public class Limelight extends SubsystemBase {
   PhotonCamera limelight = new PhotonCamera("OV5647");
 
   
-  //private NetworkTable Limelight = NetworkTableInstance.getDefault().getTable("Limelight");
+  private NetworkTable networkTable = NetworkTableInstance.getDefault().getTable("Limelight");
   //private NetworkTable coloredShape = NetworkTableInstance.getDefault().getTable("ColoredShape");
   
   private PhotonTrackedTarget target = limelight.getLatestResult().getBestTarget();
@@ -46,8 +46,16 @@ public class Limelight extends SubsystemBase {
   }
 
 
-
-
+  // This changes the pipeline
+  public void setToApril(){
+    limelight.setPipelineIndex(0);
+  }
+  public void setToReflective(){
+    limelight.setPipelineIndex(1);
+  }
+  public void setToShape(){
+    limelight.setPipelineIndex(2);
+  }
 
   public VisionLEDMode getLightState(){
     return limelight.getLEDMode();

@@ -44,7 +44,7 @@ public class autoBalance extends CommandBase {
   @Override
   public void execute() {
     double angle = drivetrain.getPitchAngle();
-    System.out.println(angle);
+    
 
 
 

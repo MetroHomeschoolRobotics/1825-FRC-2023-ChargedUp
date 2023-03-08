@@ -36,8 +36,10 @@ public class ArmMovement extends CommandBase {
     arm.moveAngleMotor(controller.getRightY());
     // telescoping the arm //Great job on the comments :) A+ 
     if(controller.getRightTriggerAxis()>0.01){
+      arm.resetShaftEncoders();
       arm.moveTeleMotor(controller.getRightTriggerAxis());
     }else if(controller.getLeftTriggerAxis()>0.01){
+      arm.resetShaftEncoders();
       arm.moveTeleMotor(-(controller.getLeftTriggerAxis()));
     }else{
       arm.moveTeleMotor(0);

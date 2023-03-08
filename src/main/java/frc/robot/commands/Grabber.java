@@ -42,6 +42,7 @@ public class Grabber extends CommandBase {
   public void end(boolean interrupted) {
     //grabberPneumatic.setGrabberOff();
     //grabberPneumatic.setCompressor(false); //TODO I commented out these lines - Joseph
+    System.out.println("end!!!");
   }
 
   // Returns true when the command should end.
