@@ -7,16 +7,28 @@ package frc.robot;
 import frc.robot.commands.AutonomousExperiment;
 import frc.robot.commands.autoBalance;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -96,22 +108,70 @@ public class RobotContainer {
    * joysticks}.
    */
 
+  // Possible path planner things:
+  public Command loadPathPlannerTrajectoryToRamseteCommand(String filename, boolean resetOdometry) {
+    
+    Trajectory trajectory;
+
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException exception) {
+      DriverStation.reportError("Unable to open trajectory" + filename, exception.getStackTrace());
+      System.out.println("Unable to read from file " + filename);
+      return new InstantCommand();
+    }
+
+    RamseteCommand ramseteCommand = new RamseteCommand(trajectory, r_drivetrain::getPosition,
+        new RamseteController(Constants.ramseteB, Constants.ramseteZeta),
+        new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVolts, Constants.kaVolts),
+        Constants._diffDriveKinematics, r_drivetrain::getWheelSpeed, new PIDController(Constants.kpDriveVel, 0, 0),
+        new PIDController(Constants.kpDriveVel, 0, 0), r_drivetrain::tankDriveVolts, r_drivetrain);
+
+
+    
+    if(resetOdometry){
+      return new SequentialCommandGroup(new InstantCommand(()->r_drivetrain.resetOdometry(trajectory.getInitialPose())),ramseteCommand);
+    }else{
+      return ramseteCommand;
+    }
+
+
+  }
+
+
+
+
+
+
+
   private void getAutoChooserOptions() {
     _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
 
-    _autoChooser.addOption("Autonomous Test", new AutoTurnExperiment(r_drivetrain, 90));
-    
-    _autoChooser.addOption("Fowards Auto", new AutonomousExperiment(r_drivetrain, 5, 0).andThen(new AutonomousExperiment(r_drivetrain, -5, 0)));
+    _autoChooser.addOption("Autonomous Test", loadPathPlannerTrajectoryToRamseteCommand(
+      "Straight4meters.wpilib.json", true));
 
-    _autoChooser.addOption("Straight6meters", new ResetOdometry(Constants.Straight6meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight6meters)));
+    _autoChooser.addOption("Fowards Auto",
+        new AutonomousExperiment(r_drivetrain, 5, 0).andThen(new AutonomousExperiment(r_drivetrain, -5, 0)));
 
-    _autoChooser.addOption("Straight5meters", new ResetOdometry(Constants.Straight5meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight5meters)));
+    _autoChooser.addOption("Straight6meters",
+        new ResetOdometry(Constants.Straight6meters.sample(0).poseMeters, r_drivetrain)
+            .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight6meters)));
 
-    _autoChooser.addOption("Straight4meters", new ResetOdometry(Constants.Straight4meters.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight4meters)));
+    _autoChooser.addOption("Straight5meters",
+        new ResetOdometry(Constants.Straight5meters.sample(0).poseMeters, r_drivetrain)
+            .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight5meters)));
 
-    _autoChooser.addOption("ForwardthenBack", new ResetOdometry(Constants.ForwardthenBack.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.ForwardthenBack)));
-    
-    _autoChooser.addOption("Turn", new ResetOdometry(Constants.Turn.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Turn)));
+    _autoChooser.addOption("Straight4meters",
+        new ResetOdometry(Constants.Straight4meters.sample(0).poseMeters, r_drivetrain)
+            .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight4meters)));
+
+    _autoChooser.addOption("ForwardthenBack",
+        new ResetOdometry(Constants.ForwardthenBack.sample(0).poseMeters, r_drivetrain)
+            .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.ForwardthenBack)));
+
+    _autoChooser.addOption("Turn", new ResetOdometry(Constants.Turn.sample(0).poseMeters, r_drivetrain)
+        .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Turn)));
     SmartDashboard.putData(_autoChooser);
   }
 
@@ -120,9 +180,12 @@ public class RobotContainer {
     m_driverController.b().whileTrue(new autoBalance(r_drivetrain))
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
 
-    //m_driverController.a().onTrue(new ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
-    
-    //m_driverController.start().onTrue(new ToggleCompressor(pneumatics));
+    // m_driverController.a().onTrue(new
+    // ResetOdometry(Constants.goStraight.sample(0).poseMeters,
+    // r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new
+    // autoBalance(r_drivetrain)));
+
+    // m_driverController.start().onTrue(new ToggleCompressor(pneumatics));
 
     m_driverController.rightBumper().onTrue(new GrabberOpen(pneumatics));
     m_driverController.leftBumper().onTrue(new GrabberClose(pneumatics));
@@ -138,7 +201,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    
+
     // this runs the selected autonomous command☺
     return _autoChooser.getSelected();
   }

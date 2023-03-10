@@ -79,28 +79,29 @@ public final static Trajectory generateFromPathPlanner(String trajectoryJSON){
   // Start at the origin facing the +X direction
   new Pose2d(0,0,new Rotation2d(0)),
   // Pass through these two interior waypoints, making an 's' curve path
-  List.of(new Translation2d(1,1),new Translation2d(2,-1)),
+  List.of(new Translation2d(1,0),new Translation2d(2,0)),
   // End 3 meters straight ahead of where we started, facing forward
-  new Pose2d(3,0,new Rotation2d(0)),
+  new Pose2d(3,0,new Rotation2d(180)),
   // Pass config
-  new TrajectoryConfig(2,3)
+  new TrajectoryConfig(1,3)
   // Add kinematics to ensure max speed is actually obeyed
   .setKinematics(Constants._diffDriveKinematics)
   // Apply the voltage constraint
   );
   //var Traj2 = TrajectoryGenerator.generateTrajectory(
     
-  //new Pose2d(3,0,new Rotation2d(0)),
+  //new Pose2d(3,0,new Rotation2d(180)),
 
-  //List.of(new Translation2d(3,0),new Translation2d(4,0)),
+  //List.of(new Translation2d(2,0),new Translation2d(1,0)),
     // End 3 meters straight ahead of where we started, facing forward
-  //new Pose2d(0,0,new Rotation2d(0)),
+  //new Pose2d(0,0,new Rotation2d(180)),
     // Pass config
-  //new TrajectoryConfig(2,3)
+  //new TrajectoryConfig(1,3)
     // Add kinematics to ensure max speed is actually obeyed
   //.setKinematics(Constants._diffDriveKinematics)
   //);
   //var concatTraj = Traj1.concatenate(Traj2);
+  //return concatTraj;
 
   }
 public final static void putTrajectoryOnField(Trajectory trajectory, Field2d field) {
