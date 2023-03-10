@@ -7,12 +7,14 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
   CANSparkMax angleMotor = new CANSparkMax(5, MotorType.kBrushless);
   CANSparkMax telescopingMotor = new CANSparkMax(6, MotorType.kBrushless);
+  Encoder rotationEncoder = new Encoder(0, 1);
   /** Creates a new Arm. */
   public Arm() {
     angleMotor.setInverted(true);
@@ -22,10 +24,14 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Arm Motor Position", angleMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Shaft Encoder Position", rotationEncoder.getDistance());
   }
 
   public void resetAngleEncoders(){
     angleMotor.getEncoder().setPosition(0);
+  }
+  public void resetShaftEncoders(){
+    rotationEncoder.reset();
   }
 
   public double getAngleDistance(){
@@ -33,6 +39,15 @@ public class Arm extends SubsystemBase {
   }
   public double getAngleSpeed(){
     return angleMotor.getEncoder().getVelocity();
+  }
+  public double getShaftRotation(){
+    return rotationEncoder.getDistance();
+  }
+  public double getShaftRate(){
+    return rotationEncoder.getRate();
+  }
+  public double getShaftRaw(){
+    return rotationEncoder.getRaw();
   }
 
   public void setAngleEncoders(double value){

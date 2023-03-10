@@ -28,16 +28,9 @@ public class TurnOnCameraLight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(limelight.getLightState());
-    // if(limelight.getLightState() == VisionLEDMode.kOff){
-    //   limelight.LEDOn();
-    // }else if(limelight.getLightState() == VisionLEDMode.kOn){
-    //   limelight.LEDOff();
-    // }else if(limelight.getLightState() == VisionLEDMode.kDefault){
-    //   limelight.LEDOn();
-    // }
-    limelight.LEDOn();
-}
+    limelight.setToReflective();
+    System.out.println(limelight.getPipeline());
+  }
 
   // Called once the command ends or is interrupted.
   @Override

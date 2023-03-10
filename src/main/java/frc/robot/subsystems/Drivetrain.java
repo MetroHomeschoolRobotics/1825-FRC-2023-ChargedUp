@@ -75,7 +75,6 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Distance", motor3.getEncoder().getPosition());
     SmartDashboard.putNumber("Velocity", motor3.getEncoder().getVelocity());
     SmartDashboard.putNumber("Heading", gyro.getAngle());
-    System.out.println(getPosition());
     SmartDashboard.putData(gyro);
     SmartDashboard.putNumber("Rotate Angle", gyro.getYaw());
 

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Pneumatics;
 
@@ -22,6 +23,11 @@ public class Grabber extends CommandBase {
   @Override
   public void initialize() {
     //grabberPneumatic.setGrabber();
+    if(grabberPneumatic.getGrabberState() == DoubleSolenoid.Value.kForward){
+      grabberPneumatic.setGrabberClose();
+    }else{
+      grabberPneumatic.setGrabberOpen();
+    }
    grabberPneumatic.changeGrabberState();
   }
 
@@ -36,6 +42,7 @@ public class Grabber extends CommandBase {
   public void end(boolean interrupted) {
     //grabberPneumatic.setGrabberOff();
     //grabberPneumatic.setCompressor(false); //TODO I commented out these lines - Joseph
+    System.out.println("end!!!");
   }
 
   // Returns true when the command should end.
