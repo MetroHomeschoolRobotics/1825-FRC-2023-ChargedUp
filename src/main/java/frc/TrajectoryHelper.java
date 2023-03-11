@@ -61,33 +61,33 @@ public class TrajectoryHelper {
   }
 
 public final static Trajectory generateFromPathPlanner(String trajectoryJSON){
-  // trajectoryJSON = "pathplanner/generatedJSON/"+trajectoryJSON+".wpilib.json";
-  // Trajectory trajectory;
-  // try {
-  // Path trajectoryPath =
-  // Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-  // trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-  // } catch (IOException ex) {
-  // DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON,
-  // ex.getStackTrace());
-  // TrajectoryConfig config = new TrajectoryConfig(1, 1);
-  // trajectory= TrajectoryGenerator.generateTrajectory(new Pose2d(), List.of(),
-  // new Pose2d(), config);
-  // }
-  // return trajectory;
-  return TrajectoryGenerator.generateTrajectory(
-  // Start at the origin facing the +X direction
-  new Pose2d(0,0,new Rotation2d(0)),
-  // Pass through these two interior waypoints, making an 's' curve path
-  List.of(new Translation2d(1,0),new Translation2d(2,0)),
-  // End 3 meters straight ahead of where we started, facing forward
-  new Pose2d(3,0,new Rotation2d(180)),
-  // Pass config
-  new TrajectoryConfig(1,3)
-  // Add kinematics to ensure max speed is actually obeyed
-  .setKinematics(Constants._diffDriveKinematics)
+  trajectoryJSON = "pathplanner/generatedJSON/"+trajectoryJSON+".wpilib.json";
+  Trajectory trajectory;
+  try {
+  Path trajectoryPath =
+  Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+  trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+  } catch (IOException ex) {
+  DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON,
+  ex.getStackTrace());
+  TrajectoryConfig config = new TrajectoryConfig(1, 1);
+  trajectory= TrajectoryGenerator.generateTrajectory(new Pose2d(), List.of(),
+  new Pose2d(), config);
+  }
+  return trajectory;
+  // return TrajectoryGenerator.generateTrajectory(
+  // // Start at the origin facing the +X direction
+  // new Pose2d(0,0,new Rotation2d(0)),
+  // // Pass through these two interior waypoints, making an 's' curve path
+  // List.of(new Translation2d(1,0),new Translation2d(2,0)),
+  // // End 3 meters straight ahead of where we started, facing forward
+  // new Pose2d(3,0,new Rotation2d(180)),
+  // // Pass config
+  // new TrajectoryConfig(1,3)
+  // // Add kinematics to ensure max speed is actually obeyed
+  // .setKinematics(Constants._diffDriveKinematics)
   // Apply the voltage constraint
-  );
+  //);
   //var Traj2 = TrajectoryGenerator.generateTrajectory(
     
   //new Pose2d(3,0,new Rotation2d(180)),
@@ -133,7 +133,7 @@ public final static void putTrajectoryOnField(Trajectory trajectory, Field2d fie
         },
         RobotContainer.r_drivetrain);
         return new AddTrajectoryToField(RobotContainer.r_drivetrain.getField2d(), _trajectoryToFollow).andThen(ramseteCommand);
-      //r_drivetrain.resetOdometry(generateFromPathPlanner("hi"));
+      //RobotContainer.r_drivetrain.resetOdometry(Trajectory.getInitialP);
     }
   
 }

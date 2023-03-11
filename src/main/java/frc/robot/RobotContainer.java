@@ -10,6 +10,9 @@ import frc.robot.commands.autoBalance;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Supplier;
+
+import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
@@ -18,6 +21,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -107,9 +111,14 @@ public class RobotContainer {
    * joysticks}.
    */
 
+
+
+
+
+
   // Possible path planner things:
   public Command loadPathPlannerTrajectoryToRamseteCommand(String filename, boolean resetOdometry) {
-    
+    filename = "pathplanner/generatedJSON/"+filename+".wpilib.json";
     Trajectory trajectory;
 
     try {
@@ -121,11 +130,15 @@ public class RobotContainer {
       return new InstantCommand();
     }
 
+    RamseteController ramseteController = new RamseteController(Constants.ramseteB, Constants.ramseteZeta);
+
+    ramseteController.setTolerance(new Pose2d(0.00001,0.00001, new Rotation2d(1)));
+
     RamseteCommand ramseteCommand = new RamseteCommand(trajectory, r_drivetrain::getPosition,
-        new RamseteController(Constants.ramseteB, Constants.ramseteZeta),
+        ramseteController,
         new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVolts, Constants.kaVolts),
-        Constants._diffDriveKinematics, r_drivetrain::getWheelSpeed, new PIDController(Constants.kpDriveVel, 0, 0),
-        new PIDController(Constants.kpDriveVel, 0, 0), r_drivetrain::tankDriveVolts, r_drivetrain);
+        Constants._diffDriveKinematics,r_drivetrain::getWheelSpeed, new PIDController(Constants.kpDriveVel, 0, 0),
+        new PIDController(Constants.kpDriveVel, 0, 0), (leftVolts, rightVolts)-> r_drivetrain.tankDriveVolts(leftVolts,rightVolts), r_drivetrain);
 
 
     
@@ -148,14 +161,13 @@ public class RobotContainer {
     _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
 
     _autoChooser.addOption("Autonomous Test", loadPathPlannerTrajectoryToRamseteCommand(
-      "Straight4meters.wpilib.json", true));
+      "Straight4meters", true));
 
     _autoChooser.addOption("Fowards Auto",
-        new AutonomousExperiment(r_drivetrain, 5, 0).andThen(new AutonomousExperiment(r_drivetrain, -5, 0)));
-
+        loadPathPlannerTrajectoryToRamseteCommand("Straight5meters",true));
+    
     _autoChooser.addOption("Straight6meters",
-        new ResetOdometry(Constants.Straight6meters.sample(0).poseMeters, r_drivetrain)
-            .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight6meters)));
+        loadPathPlannerTrajectoryToRamseteCommand("Straight6meters", true));
 
     _autoChooser.addOption("Straight5meters",
         new ResetOdometry(Constants.Straight5meters.sample(0).poseMeters, r_drivetrain)
@@ -169,8 +181,7 @@ public class RobotContainer {
         new ResetOdometry(Constants.ForwardthenBack.sample(0).poseMeters, r_drivetrain)
             .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.ForwardthenBack)));
 
-    _autoChooser.addOption("Turn", new ResetOdometry(Constants.Turn.sample(0).poseMeters, r_drivetrain)
-        .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Turn)));
+    _autoChooser.addOption("Turn", loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true).andThen(new autoBalance(r_drivetrain)));
     SmartDashboard.putData(_autoChooser);
   }
 
