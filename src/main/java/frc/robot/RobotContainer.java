@@ -33,6 +33,7 @@ import frc.robot.commands.Grabber;
 import frc.robot.commands.ToggleCompressor;
 import frc.robot.commands.TurnOnCameraLight;
 import frc.robot.commands.ArmMovement;
+import frc.robot.commands.ArmStability;
 import frc.robot.commands.AutoTurnExperiment;
 
 /**
@@ -49,13 +50,14 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(0);
+  private final CommandXboxController m_manipulatorController = new CommandXboxController(1);
 
   public static final Pneumatics pneumatics = new Pneumatics();
   private static final Arm arm = new Arm();
   public static final Drivetrain r_drivetrain = new Drivetrain();
   private final Limelight limelight = new Limelight(r_drivetrain);
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
-  private final ArmMovement armRotation = new ArmMovement(m_driverController, arm, 0);
+  private final ArmMovement armRotation = new ArmMovement(m_manipulatorController, arm, 0);
 
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
@@ -121,12 +123,13 @@ public class RobotContainer {
 
     //m_driverController.a().onTrue(new ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
     
-    m_driverController.back().whileTrue(new ToggleCompressor(pneumatics));
+    m_manipulatorController.back().whileTrue(new ToggleCompressor(pneumatics));
 
-    m_driverController.rightBumper().whileTrue(new Grabber(pneumatics));
+    m_manipulatorController.rightBumper().whileTrue(new Grabber(pneumatics));
     m_driverController.x().whileTrue(new TurnOnCameraLight(limelight));
 
     m_driverController.y().whileTrue(new DriveToApril(r_drivetrain, limelight));
+    m_manipulatorController.a().whileTrue(new ArmStability(m_manipulatorController, arm, 0));
 
   }
 

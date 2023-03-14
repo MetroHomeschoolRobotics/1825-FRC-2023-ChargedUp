@@ -45,6 +45,7 @@ public class Drivetrain extends SubsystemBase {
     
     // inverts the right side 
     motor1.setInverted(true);
+    motor3.setInverted(false);
 
     // causes the other motors to follow the original two motors
     motor2.follow(motor1);
