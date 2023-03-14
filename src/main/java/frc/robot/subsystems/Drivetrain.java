@@ -10,6 +10,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -66,6 +67,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putData("field", field);
     
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-getHeading()),motor3.getEncoder().getPosition(),motor1.getEncoder().getPosition()); 
+    
   }
   
   @Override
