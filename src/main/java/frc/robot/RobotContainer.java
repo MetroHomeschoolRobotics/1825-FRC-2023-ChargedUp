@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.AutonomousExperiment;
+import frc.robot.commands.ColoredShapePipeline;
 import frc.robot.commands.autoBalance;
 
 import java.io.IOException;
@@ -45,9 +46,9 @@ import frc.robot.commands.DriveToApril;
 import frc.robot.commands.ResetOdometry;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
-
+import frc.robot.commands.ReflectivePipeline;
 import frc.robot.commands.ToggleCompressor;
-import frc.robot.commands.TurnOnCameraLight;
+import frc.robot.commands.AprilTagPipeline;
 import frc.robot.commands.ArmMovement;
 import frc.robot.commands.ArmStability;
 import frc.robot.commands.AutoTurnExperiment;
@@ -74,6 +75,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight(r_drivetrain);
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
   private final ArmMovement armRotation = new ArmMovement(m_manipulatorController, arm, 0);
+  private final ArmStability armStability = new ArmStability( arm, 0);
 
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
@@ -81,6 +83,7 @@ public class RobotContainer {
   private void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
     CommandScheduler.getInstance().setDefaultCommand(arm, armRotation);
+    CommandScheduler.getInstance().setDefaultCommand(arm, armStability);
   }
 
   private void init() {
@@ -188,19 +191,25 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // make 'B' turn on autoBalance when held
-    m_driverController.b().whileTrue(new autoBalance(r_drivetrain))
+    // Driver controller
+    m_driverController.a().whileTrue(new autoBalance(r_drivetrain))
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
 
-    //m_driverController.a().onTrue(new ResetOdometry(Constants.goStraight.sample(0).poseMeters, r_drivetrain).andThen(TrajectoryHelper.createTrajectoryCommand(Constants.goStraight)).andThen(new autoBalance(r_drivetrain)));
-    
+    m_driverController.x().whileTrue(new AprilTagPipeline(limelight));
+
+    m_driverController.b().whileTrue(new ReflectivePipeline(limelight));
+
+    //m_driverController.y().whileTrue(new ColoredShapePipeline(limelight));  TODO This might be unnessasary
+
+    m_driverController.leftBumper().whileTrue(new DriveToApril(r_drivetrain, limelight));
+
+    // Manipulator controller
+
     m_manipulatorController.back().whileTrue(new ToggleCompressor(pneumatics));
 
     m_manipulatorController.rightBumper().whileTrue(new Grabber(pneumatics));
-    m_driverController.x().whileTrue(new TurnOnCameraLight(limelight));
 
-    m_driverController.y().whileTrue(new DriveToApril(r_drivetrain, limelight));
-    m_manipulatorController.a().whileTrue(new ArmStability(m_manipulatorController, arm, 0));
+    m_manipulatorController.a().whileTrue(new ArmStability(arm, 0));
 
   }
 

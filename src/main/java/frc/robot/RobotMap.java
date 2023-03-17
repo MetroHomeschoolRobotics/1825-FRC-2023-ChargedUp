@@ -10,5 +10,5 @@ import edu.wpi.first.math.util.Units;
 /** Add your docs here. */
 public class RobotMap {
 
-    public static double limelightCameraHeightM = Units.inchesToMeters(13);
+    public static double limelightCameraHeightM = Units.inchesToMeters(10.5);
 }
