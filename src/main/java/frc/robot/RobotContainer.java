@@ -173,7 +173,7 @@ public class RobotContainer {
         new ResetOdometry(Constants.ForwardthenBack.sample(0).poseMeters, r_drivetrain)
             .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.ForwardthenBack)));
 
-    _autoChooser.addOption("Turn", loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true).andThen(new autoBalance(r_drivetrain)));
+    _autoChooser.addOption("Turn", loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true).andThen(new autoBalance(r_drivetrain))); 
     SmartDashboard.putData(_autoChooser);
   }
 
