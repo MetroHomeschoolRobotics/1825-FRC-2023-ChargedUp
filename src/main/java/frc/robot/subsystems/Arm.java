@@ -92,10 +92,27 @@ public class Arm extends SubsystemBase {
   public boolean getBeamBreakSensor() {//reads true if triggered for retracting the arm.
     return !BeamBreakSensor.get();
   }
+// Insert arm stability here 
+
+public double setArmStability(double angle, double radius){ //this equation helps the arm to fight gravity which is affected by the angle and arm extension length
+    
+  double maxForce = 0.000303*radius + 0.0156;
+
+  //double balancePointDistance = 0.00333*(radius)*(radius)+0.130301*(radius);  // the arm balance point is parabolicly related to the length  // this encoder used rotations as a position mesurement, so it can be converted to degrees with this method
+  
+  double force = -Math.sin(angle*(Math.PI/180))*maxForce;  // to get the input needed, we take the sine of the angle from the top and increase the amplitude depending on how extended the arm is times some constant
+  /* Moved the maxforce to outside the sin function. 
+  Also, put in a negative sign to correct the direction
+  Joseph B*/ 
+  return force;
+}
+
+/*start existing wrong
   public double setArmStability(double encodervalue, double extension){ //this equation helps the arm to fight gravity which is affected by the angle and arm extension length
     double balancePointDistance = 0.00333*(extension)*(extension)+0.130301*(extension);
     double angle = 360*(encodervalue);
     double force = Math.asin(angle) * balancePointDistance;
     return force;
   }
+ end of existing wrong*/
 }
