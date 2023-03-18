@@ -29,5 +29,8 @@ public class Constants {
     public static Trajectory Straight4meters = TrajectoryHelper.generateFromPathPlanner("Straight4meters");
     public static Trajectory ForwardthenBack = TrajectoryHelper.generateFromPathPlanner("ForwardthenBack");
     public static Trajectory Turn = TrajectoryHelper.generateFromPathPlanner("Turn");
+
+    public static final int BeamBreakSensor = 1;
+    public static final int ToFSensor = 0;
     
 }

@@ -9,7 +9,9 @@ import frc.robot.commands.autoBalance;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
+import java.util.List;
+import java.util.function.Supplier;
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -34,9 +36,11 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Pneumatics;
+import frc.robot.subsystems.TimeofFlight;
 import frc.robot.commands.DriveTeleop;
 import frc.robot.commands.DriveToApril;
 import frc.robot.commands.ResetOdometry;
+import frc.robot.commands.RetractArm;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
 import frc.robot.commands.ReflectivePipeline;
@@ -44,7 +48,8 @@ import frc.robot.commands.ToggleCompressor;
 import frc.robot.commands.AprilTagPipeline;
 import frc.robot.commands.ArmMovement;
 import frc.robot.commands.ArmStability;
-
+import frc.robot.commands.AutoGrabber;
+import frc.robot.commands.AutoTurnExperiment;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -68,6 +73,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight(r_drivetrain);
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
   private final ArmMovement armRotation = new ArmMovement(m_manipulatorController, arm, 0);
+  private final TimeofFlight grabbersensor = new TimeofFlight();//is this the right way to do it?
   private final ArmStability armStability = new ArmStability(arm, 0);
 
 
@@ -189,8 +195,13 @@ public class RobotContainer {
 
     m_manipulatorController.rightBumper().whileTrue(new Grabber(pneumatics));
 
-    m_manipulatorController.a().whileTrue(new ArmStability(arm, 0));
+    //m_manipulatorController.a().whileTrue(new ArmStability(arm, 0));
+    m_manipulatorController.povDown().whileTrue(new RetractArm(m_manipulatorController, arm, 0));
 
+    Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
+
+    m_manipulatorController.povDown().and(BeamBreakDetector).whileTrue(new RetractArm(m_driverController, arm, -0.5));
+    m_manipulatorController.leftBumper().whileTrue(new AutoGrabber(pneumatics, grabbersensor));
   }
 
   /**
