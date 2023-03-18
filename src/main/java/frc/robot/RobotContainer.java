@@ -4,25 +4,18 @@
 
 package frc.robot;
 
-import frc.robot.commands.AutonomousExperiment;
-import frc.robot.commands.ColoredShapePipeline;
+
 import frc.robot.commands.autoBalance;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Supplier;
 
-import com.pathplanner.lib.PathPlanner;
-
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -51,7 +44,7 @@ import frc.robot.commands.ToggleCompressor;
 import frc.robot.commands.AprilTagPipeline;
 import frc.robot.commands.ArmMovement;
 import frc.robot.commands.ArmStability;
-import frc.robot.commands.AutoTurnExperiment;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -75,7 +68,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight(r_drivetrain);
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
   private final ArmMovement armRotation = new ArmMovement(m_manipulatorController, arm, 0);
-  private final ArmStability armStability = new ArmStability( arm, 0);
+  private final ArmStability armStability = new ArmStability(arm, 0);
 
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
@@ -83,7 +76,7 @@ public class RobotContainer {
   private void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
     CommandScheduler.getInstance().setDefaultCommand(arm, armRotation);
-    CommandScheduler.getInstance().setDefaultCommand(arm, armStability);
+    //CommandScheduler.getInstance().setDefaultCommand(arm, armStability);
   }
 
   private void init() {
@@ -116,11 +109,6 @@ public class RobotContainer {
    * joysticks}.
    */
 
-
-
-
-
-
   // Possible path planner things:
   public Command loadPathPlannerTrajectoryToRamseteCommand(String filename, boolean resetOdometry) {
     filename = "pathplanner/generatedJSON/"+filename+".wpilib.json";
@@ -144,24 +132,17 @@ public class RobotContainer {
         new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVolts, Constants.kaVolts),
         Constants._diffDriveKinematics,r_drivetrain::getWheelSpeed, new PIDController(Constants.kpDriveVel, 0, 0),
         new PIDController(Constants.kpDriveVel, 0, 0), (leftVolts, rightVolts)-> r_drivetrain.tankDriveVolts(leftVolts,rightVolts), r_drivetrain);
-
-
     
     if(resetOdometry){
       return new SequentialCommandGroup(new InstantCommand(()->r_drivetrain.resetOdometry(trajectory.getInitialPose())),ramseteCommand);
     }else{
       return ramseteCommand;
     }
-
-
   }
 
-
-
-
-
-
-
+  //////////////////////////////////////////////////////////////////////////
+  /*  autoChooserOptions                                                  */
+  //////////////////////////////////////////////////////////////////////////
   private void getAutoChooserOptions() {
     _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
 
@@ -204,7 +185,6 @@ public class RobotContainer {
     m_driverController.leftBumper().whileTrue(new DriveToApril(r_drivetrain, limelight));
 
     // Manipulator controller
-
     m_manipulatorController.back().whileTrue(new ToggleCompressor(pneumatics));
 
     m_manipulatorController.rightBumper().whileTrue(new Grabber(pneumatics));

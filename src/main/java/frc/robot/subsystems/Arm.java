@@ -9,7 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class Arm extends SubsystemBase {
@@ -19,7 +18,7 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public Arm() {
     angleMotor.setInverted(true);
-    //telescopingMotor.getEncoder().setPositionConversionFactor();
+    //telescopingMotor.getEncoder().setPositionConversionFactor();  TODO might need to delete this
   }
 
   @Override
@@ -28,8 +27,9 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Arm Motor Position", angleMotor.getEncoder().getPosition());
     SmartDashboard.putNumber("Shaft Encoder Position", rotationEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("ExtensionEncoderValue", telescopingMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("ShoulderSpeed", angleMotor.get() );
-    SmartDashboard.putNumber("absolute angle", getAbsoluteAngle());
+    SmartDashboard.putNumber("Telescoping distance!!!", getTeleEncoderDistance());
+    SmartDashboard.putNumber("Absolute Angle", getAbsoluteAngle());
+    SmartDashboard.putNumber("Motor Input", setArmStability(getAbsoluteAngle(), getTeleEncoderDistance()));
   }
 //The motor encoder for the rotating arm
   public void resetAngleEncoders(){
@@ -72,7 +72,7 @@ public class Arm extends SubsystemBase {
     return telescopingMotor.getEncoder().getPosition();
   }
   public double getTeleDistance(){
-    return getTeleEncoderDistance()*-0.15+84.46;  // the conversion from the length of the arm from the encoder 
+    return getTeleEncoderDistance()*-0.15+30;  // the conversion from the length of the arm from the encoder 
   }
   public double getTeleSpeed(){
     return telescopingMotor.getEncoder().getVelocity();
@@ -86,9 +86,14 @@ public class Arm extends SubsystemBase {
 
   public double setArmStability(double angle, double radius){ //this equation helps the arm to fight gravity which is affected by the angle and arm extension length
     
-    double balancePointDistance = 0.00333*(radius)*(radius)+0.130301*(radius);  // the arm balance point is parabolicly related to the lenght  // this encoder used rotations as a position mesurement, so it can be converted to degrees with this method
+    double maxForce = 0.000303*radius + 0.0156;
+
+    //double balancePointDistance = 0.00333*(radius)*(radius)+0.130301*(radius);  // the arm balance point is parabolicly related to the length  // this encoder used rotations as a position mesurement, so it can be converted to degrees with this method
     
-    double force = Math.sin(angle*(Math.PI/180)) * balancePointDistance * 0.01;  // to get the input needed, we take the sine of the angle from the top and increase the amplitude depending on how extended the arm is times some constant
+    double force = -Math.sin(angle*(Math.PI/180))*maxForce;  // to get the input needed, we take the sine of the angle from the top and increase the amplitude depending on how extended the arm is times some constant
+    /* Moved the maxforce to outside the sin function. 
+    Also, put in a negative sign to correct the direction
+    Joseph B*/ 
     return force;
   }
 }

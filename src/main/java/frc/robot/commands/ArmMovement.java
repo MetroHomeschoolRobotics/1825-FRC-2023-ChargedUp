@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Arm;
@@ -30,24 +29,25 @@ public class ArmMovement extends CommandBase {
   @Override
   public void initialize() {
     arm.resetAngleEncoders();
-    arm.setAngleEncoders(value);
+    arm.resetTeleEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(controller.getRightY());
+    // rotate the arm
     arm.moveAngleMotor(controller.getRightY());
     // telescoping the arm //Great job on the comments :) A+ 
     if(controller.getRightTriggerAxis()>0.01){
-      arm.resetShaftEncoders();
       arm.moveTeleMotor(controller.getRightTriggerAxis());
     }else if(controller.getLeftTriggerAxis()>0.01){
-      arm.resetShaftEncoders();
       arm.moveTeleMotor(-(controller.getLeftTriggerAxis()));
     }else{
       arm.moveTeleMotor(0);
     }
+
+    System.out.println(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()));
+
   }
 
   // Called once the command ends or is interrupted.
