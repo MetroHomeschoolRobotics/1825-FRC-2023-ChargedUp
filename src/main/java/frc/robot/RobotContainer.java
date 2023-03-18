@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
-
-import com.pathplanner.lib.PathPlanner;
-
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -40,9 +37,11 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Pneumatics;
+import frc.robot.subsystems.TimeofFlight;
 import frc.robot.commands.DriveTeleop;
 import frc.robot.commands.DriveToApril;
 import frc.robot.commands.ResetOdometry;
+import frc.robot.commands.RetractArm;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
 
@@ -50,6 +49,7 @@ import frc.robot.commands.ToggleCompressor;
 import frc.robot.commands.TurnOnCameraLight;
 import frc.robot.commands.ArmMovement;
 import frc.robot.commands.ArmStability;
+import frc.robot.commands.AutoGrabber;
 import frc.robot.commands.AutoTurnExperiment;
 
 /**
@@ -74,6 +74,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight(r_drivetrain);
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
   private final ArmMovement armRotation = new ArmMovement(m_manipulatorController, arm, 0);
+  private final TimeofFlight grabbersensor = new TimeofFlight();//is this the right way to do it?
 
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
@@ -113,11 +114,6 @@ public class RobotContainer {
    * joysticks}.
    */
 
-
-
-
-
-
   // Possible path planner things:
   public Command loadPathPlannerTrajectoryToRamseteCommand(String filename, boolean resetOdometry) {
     filename = "pathplanner/generatedJSON/"+filename+".wpilib.json";
@@ -152,12 +148,6 @@ public class RobotContainer {
 
 
   }
-
-
-
-
-
-
 
   private void getAutoChooserOptions() {
     _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
@@ -200,8 +190,13 @@ public class RobotContainer {
     m_driverController.x().whileTrue(new TurnOnCameraLight(limelight));
 
     m_driverController.y().whileTrue(new DriveToApril(r_drivetrain, limelight));
-    m_manipulatorController.a().whileTrue(new ArmStability(m_manipulatorController, arm, 0));
+    //m_manipulatorController.a().whileTrue(new ArmStability(m_manipulatorController, arm, 0));
+    //m_manipulatorController.povDown().whileTrue(new RetractArm(m_manipulatorController, arm, 0));
 
+    Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
+
+    m_manipulatorController.povDown().and(BeamBreakDetector).whileTrue(new RetractArm(m_driverController, arm, -0.5));
+    m_manipulatorController.leftBumper().whileTrue(new AutoGrabber(pneumatics, grabbersensor));
   }
 
   /**

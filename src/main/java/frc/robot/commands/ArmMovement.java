@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Arm;
 
 public class ArmMovement extends CommandBase {
@@ -36,12 +37,16 @@ public class ArmMovement extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
+
     System.out.println(controller.getRightY());
     arm.moveAngleMotor(controller.getRightY());
     // telescoping the arm //Great job on the comments :) A+ 
     if(controller.getRightTriggerAxis()>0.01){
       arm.resetShaftEncoders();
       arm.moveTeleMotor(controller.getRightTriggerAxis());
+      //TODO I need to move this to RobotContainer so the BeamBreak can sense this
     }else if(controller.getLeftTriggerAxis()>0.01){
       arm.resetShaftEncoders();
       arm.moveTeleMotor(-(controller.getLeftTriggerAxis()));

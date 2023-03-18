@@ -6,22 +6,25 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
   private CommandXboxController controller;
   CANSparkMax angleMotor = new CANSparkMax(5, MotorType.kBrushless);
   CANSparkMax telescopingMotor = new CANSparkMax(6, MotorType.kBrushless);
   DutyCycleEncoder rotationEncoder = new DutyCycleEncoder(0);
+  private DigitalInput BeamBreakSensor;
   /** Creates a new Arm. */
   public Arm() {
     angleMotor.setInverted(true);
+    BeamBreakSensor = new DigitalInput(Constants.BeamBreakSensor);
   }
 
   @Override
@@ -31,6 +34,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Shaft Encoder Position", rotationEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("ExtensionEncoderValue", telescopingMotor.getEncoder().getPosition());
     SmartDashboard.putNumber("ShoulderSpeed",angleMotor.get() );
+    SmartDashboard.putBoolean("Intake Sensor", !BeamBreakSensor.get());
   }
 //The motor encoder for the rotating arm
   public void resetAngleEncoders(){
@@ -46,7 +50,7 @@ public class Arm extends SubsystemBase {
     angleMotor.getEncoder().setPosition(value);
   }
   public void moveAngleMotor(double speed){
-    angleMotor.set(speed / 5); //Change this for better arm controlability.
+    angleMotor.set(speed/1); //Change this for better arm controlability.
   }
 //The REV Through bore shaft encoder
   public void resetShaftEncoders(){
@@ -79,10 +83,12 @@ public class Arm extends SubsystemBase {
     telescopingMotor.set(speed); //Changed this motor from anglemotor to telescoping motor - Joseph
   }
 
+  public boolean getBeamBreakSensor() {//reads true if triggered for retracting the arm.
+    return !BeamBreakSensor.get();
+  }
   public double setArmStability(double encodervalue, double extension){ //this equation helps the arm to fight gravity which is affected by the angle and arm extension length
-    
     double balancePointDistance = 0.00333*(extension)*(extension)+0.130301*(extension);
-    double angle = 397.3937*(encodervalue)-60.9112;
+    double angle = 360*(encodervalue);
     double force = Math.asin(angle) * balancePointDistance;
     return force;
   }
