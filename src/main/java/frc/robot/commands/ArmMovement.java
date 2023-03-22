@@ -40,7 +40,7 @@ public class ArmMovement extends CommandBase {
     Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
 
     // rotate the arm
-    arm.moveAngleMotor(controller.getRightY());
+    arm.moveAngleMotor(controller.getRightY()/5);
     // telescoping the arm //Great job on the comments :) A+ 
     if(controller.getRightTriggerAxis()>0.01){
       arm.moveTeleMotor(controller.getRightTriggerAxis());
