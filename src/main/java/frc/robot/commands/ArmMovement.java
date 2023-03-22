@@ -40,8 +40,11 @@ public class ArmMovement extends CommandBase {
     Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
 
     // rotate the arm
-    arm.moveAngleMotor(controller.getRightY()/5);
-    // telescoping the arm //Great job on the comments :) A+ 
+    arm.moveAngleMotor(controller.getRightY()+(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()))*3);
+    // Added the setArmStability command to the move angle, and set the division to 5 Joseph B.
+
+    // telescoping the arm 
+    //Great job on the comments :) A+ 
     if(controller.getRightTriggerAxis()>0.01){
       arm.moveTeleMotor(controller.getRightTriggerAxis());
       //TODO I need to move this to RobotContainer so the BeamBreak can sense this
@@ -51,7 +54,8 @@ public class ArmMovement extends CommandBase {
       arm.moveTeleMotor(0);
     }
 
-    System.out.println(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()));
+    // System.out.println(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()));
+    // Commented out the print statement, Joseph B
 
   }
 
