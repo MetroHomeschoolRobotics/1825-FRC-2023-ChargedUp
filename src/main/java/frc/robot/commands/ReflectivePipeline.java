@@ -4,32 +4,28 @@
 
 package frc.robot.commands;
 
-import org.photonvision.common.hardware.VisionLEDMode;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 
-public class TurnOnCameraLight extends CommandBase {
+public class ReflectivePipeline extends CommandBase {
+
   private Limelight limelight;
-  /** Creates a new TurnOnCameraLight. */
-  public TurnOnCameraLight(Limelight _limelight) {
+
+  /** Creates a new ReflectivePipeline. */
+  public ReflectivePipeline(Limelight _limelight) {
     limelight = _limelight;
     addRequirements(_limelight);
-
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    
-  }
-  
+  public void initialize() {}
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     limelight.setToReflective();
-    System.out.println(limelight.getPipeline());
   }
 
   // Called once the command ends or is interrupted.

@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,7 +30,7 @@ public class ArmMovement extends CommandBase {
   @Override
   public void initialize() {
     arm.resetAngleEncoders();
-    arm.setAngleEncoders(value);
+    arm.resetTeleEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,19 +39,24 @@ public class ArmMovement extends CommandBase {
 
     Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
 
-    System.out.println(controller.getRightY());
-    arm.moveAngleMotor(controller.getRightY());
-    // telescoping the arm //Great job on the comments :) A+ 
+    // rotate the arm
+    arm.moveAngleMotor(controller.getRightY()+(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()))*3);
+    // Added the setArmStability command to the move angle, and set the division to 5 Joseph B.
+
+    // telescoping the arm 
+    //Great job on the comments :) A+ 
     if(controller.getRightTriggerAxis()>0.01){
-      arm.resetShaftEncoders();
       arm.moveTeleMotor(controller.getRightTriggerAxis());
       //TODO I need to move this to RobotContainer so the BeamBreak can sense this
     }else if(controller.getLeftTriggerAxis()>0.01){
-      arm.resetShaftEncoders();
       arm.moveTeleMotor(-(controller.getLeftTriggerAxis()));
     }else{
       arm.moveTeleMotor(0);
     }
+
+    // System.out.println(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()));
+    // Commented out the print statement, Joseph B
+
   }
 
   // Called once the command ends or is interrupted.
