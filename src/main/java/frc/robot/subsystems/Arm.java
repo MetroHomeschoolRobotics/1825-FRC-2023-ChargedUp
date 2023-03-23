@@ -50,7 +50,7 @@ public class Arm extends SubsystemBase {
     angleMotor.getEncoder().setPosition(value);
   }
   public void moveAngleMotor(double speed){
-    angleMotor.set(speed/1); //Change this for better arm controlability.
+    angleMotor.set(speed/5); //Change this for better arm controllability.
   }
 //The REV Through bore shaft encoder
   public void resetShaftEncoders(){
