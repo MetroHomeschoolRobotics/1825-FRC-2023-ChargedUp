@@ -14,37 +14,30 @@ import frc.robot.subsystems.TimeofFlight;
 public class AutoGrabber extends CommandBase {
   /** Creates a new AutoGrabber. */
   private final Pneumatics grabberPneumatic;
-  private final TimeofFlight grabbersensor;
+  private final TimeofFlight grabberSensor;
 
-  public AutoGrabber(Pneumatics pneumatic, TimeofFlight grabberSensor) {
+  public AutoGrabber(Pneumatics pneumatic, TimeofFlight _grabberSensor) {
     // Use addRequirements() here to declare subsystem dependencies.
     grabberPneumatic = pneumatic;
-    grabbersensor = grabberSensor;
+    grabberSensor = _grabberSensor;
     addRequirements(pneumatic);
+    addRequirements(_grabberSensor);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    //if(grabberPneumatic.getGrabberState() == DoubleSolenoid.Value.kForward){
-      //grabberPneumatic.setGrabberClose();
-    //}else{
-      //grabberPneumatic.setGrabberOpen();
-    //}
-   //grabberPneumatic.changeGrabberState();
-
-   if(grabberPneumatic.getGrabberState() == DoubleSolenoid.Value.kForward && grabbersensor.getSensorDistance() <= 215.9 && grabbersensor.getSensorDistance() >= 165.1){
-      grabberPneumatic.setGrabberClose();
-    }
-    else{
-      grabberPneumatic.setGrabberOpen();
-    }
-    grabberPneumatic.changeGrabberState();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    // TODO changed this  (added a third parameter in the if statement)
+    if(grabberPneumatic.getGrabberState() == DoubleSolenoid.Value.kForward && grabberSensor.getSensorDistanceMM() <= 255.9 && grabberSensor.getSensorDistanceMM() >= 165.1){
+      grabberPneumatic.setGrabberClose();
+    } else{
+      // grabberPneumatic.setGrabberOpen(); TODO might need to delete this
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

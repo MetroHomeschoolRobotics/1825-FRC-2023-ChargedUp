@@ -6,12 +6,10 @@ package frc.robot;
 
 
 import frc.robot.commands.autoBalance;
+import frc.robot.commands.moveArmPos;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Supplier;
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -49,7 +47,6 @@ import frc.robot.commands.AprilTagPipeline;
 import frc.robot.commands.ArmMovement;
 import frc.robot.commands.ArmStability;
 import frc.robot.commands.AutoGrabber;
-import frc.robot.commands.AutoTurnExperiment;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -72,9 +69,8 @@ public class RobotContainer {
   public static final Drivetrain r_drivetrain = new Drivetrain();
   private final Limelight limelight = new Limelight(r_drivetrain);
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
-  private final ArmMovement armRotation = new ArmMovement(m_manipulatorController, arm, 0);
+  private final ArmMovement armRotation = new ArmMovement(m_manipulatorController, arm);
   private final TimeofFlight grabbersensor = new TimeofFlight();//is this the right way to do it?
-  private final ArmStability armStability = new ArmStability(arm, 0);
 
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
@@ -82,10 +78,11 @@ public class RobotContainer {
   private void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
     CommandScheduler.getInstance().setDefaultCommand(arm, armRotation);
-    //CommandScheduler.getInstance().setDefaultCommand(arm, armStability);
   }
 
   private void init() {
+    r_drivetrain.resetHeading();
+    pneumatics.setGrabberClose();
     setDefaultCommands();
   }
 
@@ -152,6 +149,10 @@ public class RobotContainer {
   private void getAutoChooserOptions() {
     _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
 
+    _autoChooser.addOption("Go forward, turn, and dock (L)", loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true).andThen(new autoBalance(r_drivetrain))); 
+
+    _autoChooser.addOption("Go forward, turn, and dock (R)", loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true).andThen(new autoBalance(r_drivetrain)));
+
     _autoChooser.addOption("Autonomous Test", loadPathPlannerTrajectoryToRamseteCommand(
       "Straight4meters", true));
 
@@ -159,7 +160,7 @@ public class RobotContainer {
         loadPathPlannerTrajectoryToRamseteCommand("Straight5meters",true));
     
     _autoChooser.addOption("Straight6meters",
-        loadPathPlannerTrajectoryToRamseteCommand("Straight6meters", true));
+        loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true));
 
     _autoChooser.addOption("Straight5meters",
         new ResetOdometry(Constants.Straight5meters.sample(0).poseMeters, r_drivetrain)
@@ -173,35 +174,27 @@ public class RobotContainer {
         new ResetOdometry(Constants.ForwardthenBack.sample(0).poseMeters, r_drivetrain)
             .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.ForwardthenBack)));
 
-    _autoChooser.addOption("Turn", loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true).andThen(new autoBalance(r_drivetrain))); 
     SmartDashboard.putData(_autoChooser);
   }
 
   private void configureBindings() {
-    // Driver controller
+    ///////////////// Driver controller ///////////////////
     m_driverController.a().whileTrue(new autoBalance(r_drivetrain))
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
-
     m_driverController.x().whileTrue(new AprilTagPipeline(limelight));
-
     m_driverController.b().whileTrue(new ReflectivePipeline(limelight));
-
-    //m_driverController.y().whileTrue(new ColoredShapePipeline(limelight));  TODO This might be unnessasary
-
     m_driverController.leftBumper().whileTrue(new DriveToApril(r_drivetrain, limelight));
 
-    // Manipulator controller
-    m_manipulatorController.back().whileTrue(new ToggleCompressor(pneumatics));
 
-    m_manipulatorController.rightBumper().whileTrue(new Grabber(pneumatics));
-
-    //m_manipulatorController.a().whileTrue(new ArmStability(arm, 0));
-    m_manipulatorController.povDown().whileTrue(new RetractArm(m_manipulatorController, arm, 0));
-
+    ///////////////// Manipulator controller //////////////////
     Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
-
-    m_manipulatorController.povDown().and(BeamBreakDetector).whileTrue(new RetractArm(m_driverController, arm, -0.5));
+    m_manipulatorController.back().whileTrue(new ToggleCompressor(pneumatics));
+    // TODO changed this to onTrue and took out the trigger/put it in the command and commented it
+    //m_manipulatorController.povDown()/*.and(BeamBreakDetector)*/.whileTrue(new RetractArm(m_driverController, arm, -0.5));
     m_manipulatorController.leftBumper().whileTrue(new AutoGrabber(pneumatics, grabbersensor));
+    m_manipulatorController.rightBumper().whileTrue(new Grabber(pneumatics));
+    // TODO changed this to run moveArmPos
+    m_manipulatorController.y().whileTrue(new moveArmPos(arm, 55, 0));
   }
 
   /**

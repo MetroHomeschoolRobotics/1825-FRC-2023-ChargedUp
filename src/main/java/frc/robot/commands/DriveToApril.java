@@ -4,9 +4,6 @@
 
 package frc.robot.commands;
 
-import java.sql.DriverAction;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -74,6 +71,11 @@ public class DriveToApril extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(limelight.hasTargests() == true){
     return pidR.atSetpoint();
-  }
+    }
+    else{
+      return false;
+    } 
+   }
 }

@@ -7,20 +7,16 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Arm;
 
 public class ArmMovement extends CommandBase {
 
   private Arm arm;
   private CommandXboxController controller;
-  private double value;
-  public PIDController armPIDController;
 
   /** Creates a new ArmMovement. */
-  public ArmMovement(CommandXboxController _controller, Arm _arm, double encoderValue) {
+  public ArmMovement(CommandXboxController _controller, Arm _arm) {
     arm = _arm;
-    value = encoderValue;
     controller = _controller;
     addRequirements(_arm);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -37,25 +33,29 @@ public class ArmMovement extends CommandBase {
   @Override
   public void execute() {
 
-    Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
-
-    // rotate the arm
-    arm.moveAngleMotor(controller.getRightY()+(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()))*3);
+    ///////////// rotate the arm /////////////
+    if(controller.getRightY()>=0.001){
+    arm.moveAngleMotor((-controller.getRightY()/3)+(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance())));
+    }else if(controller.getRightY()<=-0.001){
+      arm.moveAngleMotor((-controller.getRightY()/3)+(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance())));
+    } else {
+      arm.moveAngleMotor(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleDistance()));
+    }
     // Added the setArmStability command to the move angle, and set the division to 5 Joseph B.
 
-    // telescoping the arm 
-    //Great job on the comments :) A+ 
+    ///////////// telescoping the arm /////////////
     if(controller.getRightTriggerAxis()>0.01){
       arm.moveTeleMotor(controller.getRightTriggerAxis());
-      //TODO I need to move this to RobotContainer so the BeamBreak can sense this
     }else if(controller.getLeftTriggerAxis()>0.01){
       arm.moveTeleMotor(-(controller.getLeftTriggerAxis()));
     }else{
       arm.moveTeleMotor(0);
     }
 
-    // System.out.println(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()));
-    // Commented out the print statement, Joseph B
+    if(arm.getBeamBreakSensor() == true){
+      arm.resetShaftEncoders();   // reset the encoder when the beam break sensor is true (when it is fully retracted)
+    }
+
 
   }
 

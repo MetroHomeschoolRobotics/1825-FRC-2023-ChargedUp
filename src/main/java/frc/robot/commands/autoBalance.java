@@ -43,13 +43,7 @@ public class autoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double angle = drivetrain.getPitchAngle();
-    
-
-
-
-
-    drivetrain.autoDrive(MathUtil.clamp(-(_PIDController.calculate(drivetrain.getPitchAngle())),-0.4,0.4), 0);
+    drivetrain.autoDrive(MathUtil.clamp(-(_PIDController.calculate(drivetrain.getPitchAngle())),-0.5,0.5), 0);
   }
 
   // Called once the command ends or is interrupted.
@@ -61,6 +55,6 @@ public class autoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return _PIDController.atSetpoint();
   }
 }

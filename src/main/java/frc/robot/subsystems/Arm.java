@@ -22,7 +22,8 @@ public class Arm extends SubsystemBase {
   public Arm() {
     angleMotor.setInverted(true);
     BeamBreakSensor = new DigitalInput(Constants.BeamBreakSensor);
-    //telescopingMotor.getEncoder().setPositionConversionFactor();  TODO might need to delete this
+
+    angleMotor.setSmartCurrentLimit(35);
   }
 
   @Override
@@ -50,7 +51,7 @@ public class Arm extends SubsystemBase {
     angleMotor.getEncoder().setPosition(value);
   }
   public void moveAngleMotor(double speed){
-    angleMotor.set(speed / 3); //Change this for better arm controlability.
+    angleMotor.set(speed); //Change this for better arm controlability.
   }
 //The REV Through bore shaft encoder
   public void resetShaftEncoders(){
@@ -97,11 +98,9 @@ public class Arm extends SubsystemBase {
 public double setArmStability(double angle, double radius){ //this equation helps the arm to fight gravity which is affected by the angle and arm extension length
     
   double maxForce = 0.000303*radius + 0.0156;
-  //double balancePointDistance = 0.00333*(radius)*(radius)+0.130301*(radius);  // the arm balance point is parabolicly related to the length  // this encoder used rotations as a position mesurement, so it can be converted to degrees with this method
   
-  double force = -Math.sin(angle*(Math.PI/180))*maxForce;  // to get the input needed, we take the sine of the angle from the top and increase the amplitude depending on how extended the arm is times some constant
-  /* Moved the maxforce to outside the sin function. 
-  Also, put in a negative sign to correct the direction
+  double force = Math.sin(angle*(Math.PI/180))*maxForce;  // to get the input needed, we take the sine of the angle from the top and increase the amplitude depending on how extended the arm is times some constant
+  /* Moved the maxforce to outside the sin function.
   Joseph B*/ 
   return force;
 }

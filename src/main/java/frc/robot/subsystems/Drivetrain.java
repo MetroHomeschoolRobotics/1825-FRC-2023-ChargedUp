@@ -58,15 +58,24 @@ public class Drivetrain extends SubsystemBase {
 
     motor1.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
     motor3.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
+    
+    motor1.setSmartCurrentLimit(35);
+    motor2.setSmartCurrentLimit(35);
+    motor3.setSmartCurrentLimit(35);
+    motor4.setSmartCurrentLimit(35);
+    
+    
     // resets the gyro
     gyro.reset();
     gyro.calibrate();
     //reset all encoders
     resetEncoders();
+
     
     SmartDashboard.putData("field", field);
     
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-getHeading()),motor3.getEncoder().getPosition(),motor1.getEncoder().getPosition()); 
+    
     
   }
   
@@ -96,7 +105,7 @@ public class Drivetrain extends SubsystemBase {
   }
   public void resetOdometry(Pose2d position){
     resetEncoders();
-    odometry.resetPosition(getRotation2d(), motor3.getEncoder().getPosition(),motor1.getEncoder().getPosition(), position);
+    odometry.resetPosition(Rotation2d.fromDegrees(-getHeading()), motor3.getEncoder().getPosition(),motor1.getEncoder().getPosition(), position);
   }
   
   public Rotation2d getRotation2d() {//current heading in trajectory following format
@@ -112,7 +121,8 @@ public class Drivetrain extends SubsystemBase {
     return gyro.getAngle();
   }
   public double getPitchAngle() {
-    return gyro.getPitch();
+    // TODO I reversed this
+    return gyro.getPitch()*-1;
   }
   public double getDistanceR() {
     return motor1.getEncoder().getPosition();

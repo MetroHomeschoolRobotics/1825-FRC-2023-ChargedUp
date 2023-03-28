@@ -39,11 +39,7 @@ public class Grabber extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    //grabberPneumatic.setGrabberOff();
-    //grabberPneumatic.setCompressor(false); //TODO I commented out these lines - Joseph
-    System.out.println("end!!!");
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

@@ -3,6 +3,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -31,7 +32,10 @@ public class RetractArm extends CommandBase{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.moveTeleMotor(speed);
+    Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
+    if(arm.getBeamBreakSensor() == false){
+      arm.moveTeleMotor(speed);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -43,7 +47,7 @@ public class RetractArm extends CommandBase{
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return arm.getBeamBreakSensor();
   }
 }
 

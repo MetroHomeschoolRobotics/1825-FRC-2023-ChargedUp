@@ -11,21 +11,27 @@ import frc.robot.Constants;
 
 public class TimeofFlight extends SubsystemBase {
   /** Creates a new TimeofFlight. */
-  private TimeOfFlight grabberSensor = new TimeOfFlight(Constants.ToFSensor);//TODO figure out what the sensor id is
+  private TimeOfFlight grabberSensor = new TimeOfFlight(Constants.ToFSensor);
   
   public TimeofFlight() {}
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("ToFDistanceSensor",getSensorDistance());
+    SmartDashboard.putNumber("ToFDistanceSensor", getSensorDistanceMM());
   }
 
   public long getSensorid() {
     return grabberSensor.getSerialNumber();
   }
-  public double getSensorDistance(){
+  public double getSensorDistanceMM(){
     return grabberSensor.getRange();
+  }
+  public double getSensorDistanceCM(){
+    return getSensorDistanceMM()/100;
+  }
+  public double getSensorDistanceMeters(){
+    return getSensorDistanceMM()/1000;
   }
   public boolean isMeasurementSuccessful(){
     return grabberSensor.isRangeValid();

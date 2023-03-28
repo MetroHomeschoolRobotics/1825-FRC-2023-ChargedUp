@@ -52,13 +52,11 @@ public class TurnToTarget extends CommandBase {
       System.out.println(limelight.getTargetYaw());
     }else{
       turnSpeed = 0;
+      drivetrain.getSignal();
     }
     
 
     drivetrain.autoTurnDrive(turnSpeed);
-    // speedR = -MathUtil.clamp(pidR.calculate(drivetrain.getAverageEncoderDistance(), distance), -0.1, 0.1);
-    // speedL = -MathUtil.clamp(pidL.calculate(drivetrain.getAverageEncoderDistance(), distance), -0.1, 0.1);
-    // drivetrain.tankDriveVolts(speedL, speedR);
   }
 
   // Called once the command ends or is interrupted.
@@ -69,6 +67,11 @@ public class TurnToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pidR.atSetpoint();
+    if(limelight.hasTargests() == true){
+      return pidR.atSetpoint();
+      }
+      else{
+        return false;
+      } 
   }
 }
