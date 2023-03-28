@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -41,6 +42,8 @@ public class ArmMovement extends CommandBase {
 
     // rotate the arm
     arm.moveAngleMotor(controller.getRightY()+(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()))*3);
+    SmartDashboard.putNumber("Arm joystick position", controller.getRightY());
+    SmartDashboard.putNumber("Total value sent to arm", (controller.getRightY()+(arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleEncoderDistance()))*3)/3);
     // Added the setArmStability command to the move angle, and set the division to 5 Joseph B.
 
     // telescoping the arm 

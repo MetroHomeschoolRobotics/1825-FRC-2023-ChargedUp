@@ -82,6 +82,7 @@ public class RobotContainer {
   private void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
     CommandScheduler.getInstance().setDefaultCommand(arm, armRotation);
+    r_drivetrain.resetHeading();
     //CommandScheduler.getInstance().setDefaultCommand(arm, armStability);
   }
 
@@ -186,9 +187,9 @@ public class RobotContainer {
 
     m_driverController.b().whileTrue(new ReflectivePipeline(limelight));
 
-    //m_driverController.y().whileTrue(new ColoredShapePipeline(limelight));  TODO This might be unnessasary
+    //m_driverController.y().whileTrue(new ColoredShapePipeline(limelight));  TODO This might be unnessasary (you skipt sckuull :)
 
-    m_driverController.leftBumper().whileTrue(new DriveToApril(r_drivetrain, limelight));
+   // m_driverController.leftBumper().whileTrue(new DriveToApril(r_drivetrain, limelight));
 
     // Manipulator controller
     m_manipulatorController.back().whileTrue(new ToggleCompressor(pneumatics));
@@ -196,11 +197,10 @@ public class RobotContainer {
     m_manipulatorController.rightBumper().whileTrue(new Grabber(pneumatics));
 
     //m_manipulatorController.a().whileTrue(new ArmStability(arm, 0));
-    m_manipulatorController.povDown().whileTrue(new RetractArm(m_manipulatorController, arm, 0));
+    //m_manipulatorController.povDown().whileTrue(new RetractArm(m_manipulatorController, arm, 0));
 
     Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
 
-    m_manipulatorController.povDown().and(BeamBreakDetector).whileTrue(new RetractArm(m_driverController, arm, -0.5));
     m_manipulatorController.leftBumper().whileTrue(new AutoGrabber(pneumatics, grabbersensor));
   }
 
