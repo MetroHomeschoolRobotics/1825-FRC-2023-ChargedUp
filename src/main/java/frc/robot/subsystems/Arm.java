@@ -23,7 +23,8 @@ public class Arm extends SubsystemBase {
     angleMotor.setInverted(true);
     BeamBreakSensor = new DigitalInput(Constants.BeamBreakSensor);
 
-    angleMotor.setSmartCurrentLimit(35);
+    angleMotor.setSmartCurrentLimit(60);
+    telescopingMotor.setSmartCurrentLimit(35);
   }
 
   @Override

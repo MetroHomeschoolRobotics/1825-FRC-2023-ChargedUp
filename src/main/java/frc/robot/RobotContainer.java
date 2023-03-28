@@ -10,6 +10,8 @@ import frc.robot.commands.moveArmPos;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -37,6 +39,7 @@ import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.TimeofFlight;
 import frc.robot.commands.DriveTeleop;
 import frc.robot.commands.DriveToApril;
+import frc.robot.commands.ExtendToPoint;
 import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.RetractArm;
 import frc.TrajectoryHelper;
@@ -153,26 +156,8 @@ public class RobotContainer {
 
     _autoChooser.addOption("Go forward, turn, and dock (R)", loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true).andThen(new autoBalance(r_drivetrain)));
 
-    _autoChooser.addOption("Autonomous Test", loadPathPlannerTrajectoryToRamseteCommand(
-      "Straight4meters", true));
-
-    _autoChooser.addOption("Fowards Auto",
-        loadPathPlannerTrajectoryToRamseteCommand("Straight5meters",true));
+    _autoChooser.addOption("Arm movement test",((new moveArmPos(arm, 55, 141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new moveArmPos(arm, 0, 0)));
     
-    _autoChooser.addOption("Straight6meters",
-        loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true));
-
-    _autoChooser.addOption("Straight5meters",
-        new ResetOdometry(Constants.Straight5meters.sample(0).poseMeters, r_drivetrain)
-            .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight5meters)));
-
-    _autoChooser.addOption("Straight4meters",
-        new ResetOdometry(Constants.Straight4meters.sample(0).poseMeters, r_drivetrain)
-            .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.Straight4meters)));
-
-    _autoChooser.addOption("ForwardthenBack",
-        new ResetOdometry(Constants.ForwardthenBack.sample(0).poseMeters, r_drivetrain)
-            .andThen(TrajectoryHelper.createTrajectoryCommand(Constants.ForwardthenBack)));
 
     SmartDashboard.putData(_autoChooser);
   }
