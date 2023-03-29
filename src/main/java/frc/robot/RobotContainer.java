@@ -73,7 +73,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight(r_drivetrain);
   private final DriveTeleop r_teleop = new DriveTeleop(r_drivetrain, m_driverController);
   private final ArmMovement armRotation = new ArmMovement(m_manipulatorController, arm);
-  private final TimeofFlight grabbersensor = new TimeofFlight();//is this the right way to do it?
+  private final TimeofFlight grabbersensor = new TimeofFlight();
 
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();

@@ -54,7 +54,7 @@ public class ArmMovement extends CommandBase {
     }
 
     if(arm.getBeamBreakSensor() == true){
-      arm.resetShaftEncoders();   // reset the encoder when the beam break sensor is true (when it is fully retracted)
+      arm.resetTeleEncoders();   // reset the encoder when the beam break sensor is true (when it is fully retracted)
     }
 
 
