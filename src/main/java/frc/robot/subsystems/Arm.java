@@ -106,12 +106,5 @@ public double setArmStability(double angle, double radius){ //this equation help
   return force;
 }
 
-/*start existing wrong
-  public double setArmStability(double encodervalue, double extension){ //this equation helps the arm to fight gravity which is affected by the angle and arm extension length
-    double balancePointDistance = 0.00333*(extension)*(extension)+0.130301*(extension);
-    double angle = 360*(encodervalue);
-    double force = Math.asin(angle) * balancePointDistance;
-    return force;
-  }
- end of existing wrong*/
+
 }
