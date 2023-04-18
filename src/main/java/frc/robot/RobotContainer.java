@@ -151,6 +151,7 @@ public class RobotContainer {
   //////////////////////////////////////////////////////////////////////////
   private void getAutoChooserOptions() {
 
+    // Yay Variables :) 
     final double gearBoxChange = 16.0/27.0;
     final double midConeGridAngle = 55;
     final double highConeGridAngle = 44;
