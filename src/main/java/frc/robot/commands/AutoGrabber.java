@@ -32,7 +32,7 @@ public class AutoGrabber extends CommandBase {
   @Override
   public void execute() {
     // TODO changed this  (added a third parameter in the if statement)
-    if(grabberPneumatic.getGrabberState() == DoubleSolenoid.Value.kForward && grabberSensor.getSensorDistanceMM() <= 255.9 && grabberSensor.getSensorDistanceMM() >= 165.1){
+    if(grabberPneumatic.getGrabberState() == DoubleSolenoid.Value.kForward && grabberSensor.getSensorDistanceMM() <= 255.9 && grabberSensor.getSensorDistanceMM() >= 165.1 && grabberSensor.isMeasurementSuccessful()){
       grabberPneumatic.setGrabberClose();
     } else{
       // grabberPneumatic.setGrabberOpen(); TODO might need to delete this
