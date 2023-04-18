@@ -160,7 +160,7 @@ public class RobotContainer {
     
 
     SmartDashboard.putData(_autoChooser);
-  }
+  } 
 
   private void configureBindings() {
     ///////////////// Driver controller ///////////////////
