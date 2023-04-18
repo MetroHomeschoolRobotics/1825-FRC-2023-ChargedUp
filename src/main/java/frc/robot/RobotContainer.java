@@ -150,21 +150,31 @@ public class RobotContainer {
   /*  autoChooserOptions                                                  */
   //////////////////////////////////////////////////////////////////////////
   private void getAutoChooserOptions() {
-    _autoChooser.setDefaultOption("No Autonomous", new WaitCommand(15));
+
+    final double gearBoxChange = 16.0/27.0;
+    final double midConeGridAngle = 55;
+    final double highConeGridAngle = 44;
+    final double midConeGridExtension = 141*gearBoxChange;
+    final double highConeGridExtension = 279*gearBoxChange;
+    final double midConeGridTimeout = 2.1;
+    final double highConeGridTimeout = 1.5;
+
+    _autoChooser.setDefaultOption("No autonomous", new WaitCommand(15));
 
     _autoChooser.addOption("Go forward, turn, and dock (L)", loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true).andThen(new autoBalance(r_drivetrain))); 
 
     _autoChooser.addOption("Go forward, turn, and dock (R)", loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true).andThen(new autoBalance(r_drivetrain)));
 
-    _autoChooser.addOption("Score, exit community, and dock (L)",((new moveArmPos(arm, 55, 141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true)).andThen(new autoBalance(r_drivetrain)));
+    _autoChooser.addOption("Score, exit community, and dock (L)",((new moveArmPos(arm, midConeGridAngle, midConeGridExtension).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true)).andThen(new autoBalance(r_drivetrain)));
     
-    _autoChooser.addOption("Score, exit community, and dock (R)",((new moveArmPos(arm, 55, 141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true)).andThen(new autoBalance(r_drivetrain)));
+    _autoChooser.addOption("Score, exit community, and dock (R)",((new moveArmPos(arm, midConeGridAngle, midConeGridExtension).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true)).andThen(new autoBalance(r_drivetrain)));
     
-    _autoChooser.addOption("Score, exit community", ((new moveArmPos(arm, 55,141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true)));
+    _autoChooser.addOption("Score, exit community", ((new moveArmPos(arm, midConeGridAngle, midConeGridExtension).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true)));
     
-    _autoChooser.addOption("Score", ((new moveArmPos(arm, 55,141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))));
+    _autoChooser.addOption("Score", ((new moveArmPos(arm,midConeGridAngle,midConeGridExtension).raceWith(new WaitCommand(midConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))));
     //_autoChooser.addOption("Score, exit community, dock in middle", ((new moveArmPos(arm, 55,141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true)).andThen(loadPathPlannerTrajectoryToRamseteCommand("ReturnToDock", true)).andThen(new autoBalance(r_drivetrain)));
-    
+    _autoChooser.addOption("Attack Nearest Human", ((new moveArmPos(arm, highConeGridAngle,highConeGridExtension).raceWith(new WaitCommand(highConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 30, 10)));
+   
     SmartDashboard.putData(_autoChooser);
   }
 

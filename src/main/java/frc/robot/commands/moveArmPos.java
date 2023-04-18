@@ -49,9 +49,11 @@ public class moveArmPos extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.moveAngleMotor((-MathUtil.clamp(pidAngle.calculate(arm.getAbsoluteAngle(), setPoint), -0.5, 0.5))+arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleDistance()));
+    final double maxAngleRate = 0.5;
+    final double maxTeleRate = 1.0;
+    arm.moveAngleMotor((-MathUtil.clamp(pidAngle.calculate(arm.getAbsoluteAngle(), setPoint), -maxAngleRate, maxAngleRate))+arm.setArmStability(arm.getAbsoluteAngle(), arm.getTeleDistance()));
 
-    arm.moveTeleMotor(MathUtil.clamp(pidExtend.calculate(arm.getTeleEncoderDistance(), exSetPoint), -0.7, 0.7));
+    arm.moveTeleMotor(MathUtil.clamp(pidExtend.calculate(arm.getTeleEncoderDistance(), exSetPoint), -maxTeleRate, maxTeleRate));
   }
 
   // Called once the command ends or is interrupted.
