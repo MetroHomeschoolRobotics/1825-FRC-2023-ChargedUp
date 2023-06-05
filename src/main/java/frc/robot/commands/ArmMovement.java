@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Arm;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmMovement extends CommandBase {
 
@@ -57,6 +58,7 @@ public class ArmMovement extends CommandBase {
       arm.resetTeleEncoders();   // reset the encoder when the beam break sensor is true (when it is fully retracted)
     }
 
+    SmartDashboard.putNumber("Shoulder Stick", controller.getRightY());
 
   }
 

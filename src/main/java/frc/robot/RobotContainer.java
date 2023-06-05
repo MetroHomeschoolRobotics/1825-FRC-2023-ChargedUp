@@ -153,13 +153,14 @@ public class RobotContainer {
   private void getAutoChooserOptions() {
 
     // Yay Variables :) 
-    final double gearBoxChange = 16.0/27.0;
-    final double midConeGridAngle = 55;
-    final double highConeGridAngle = 44;
-    final double midConeGridExtension = 131*gearBoxChange;
+    final double dualMotorGearRatio = 48.0*48.0/(16.0*14.0);
+    final double gearBoxChange = dualMotorGearRatio/27.0;
+    final double midConeGridAngle = 56;
+    final double highConeGridAngle = 48;
+    final double midConeGridExtension = 140*gearBoxChange;
     final double highConeGridExtension = 279*gearBoxChange;
-    final double midConeGridTimeout = 0.9;
-    final double highConeGridTimeout = 1.5;
+    final double midConeGridTimeout = 0.8;
+    final double highConeGridTimeout = 1.1;
 
     _autoChooser.setDefaultOption("No autonomous", new WaitCommand(15));
 
