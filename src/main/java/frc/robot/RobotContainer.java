@@ -123,6 +123,10 @@ public class RobotContainer {
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
       trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      if(filename.contains("GoToGamePiece")) {
+        //System.out.println("Trajectory " + trajectoryPath + " is " + trajectory.toString());
+      }
+
     } catch (IOException exception) {
       DriverStation.reportError("Unable to open trajectory" + filename, exception.getStackTrace());
       System.out.println("Unable to read from file " + filename);
@@ -177,6 +181,8 @@ public class RobotContainer {
     //_autoChooser.addOption("Score, exit community, dock in middle", ((new moveArmPos(arm, 55,141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true)).andThen(loadPathPlannerTrajectoryToRamseteCommand("ReturnToDock", true)).andThen(new autoBalance(r_drivetrain)));
     _autoChooser.addOption("Attack Nearest Human", ((new moveArmPos(arm, highConeGridAngle,highConeGridExtension).raceWith(new WaitCommand(highConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 30, 10)));
    
+    _autoChooser.addOption("Drive to Gamepiece", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true)); 
+
     SmartDashboard.putData(_autoChooser);
   }
 

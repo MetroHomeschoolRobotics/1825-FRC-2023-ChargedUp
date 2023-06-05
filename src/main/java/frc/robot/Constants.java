@@ -19,8 +19,8 @@ public class Constants {
     public final static double _trackWidthMeters = Units.inchesToMeters(25.129);
     public final static DifferentialDriveKinematics _diffDriveKinematics = new DifferentialDriveKinematics(_trackWidthMeters);
 
-    public final static double ramseteB = 10; //2;
-    public final static double ramseteZeta = 1;  //0.7;
+    public final static double ramseteB = 5; //2;  //10
+    public final static double ramseteZeta = 0.7;  //0.7;  //1
 
 
     public static Trajectory CurveThenBalance = TrajectoryHelper.generateFromPathPlanner("Curvethenbalance");

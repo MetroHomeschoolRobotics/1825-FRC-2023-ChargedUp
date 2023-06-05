@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -20,7 +21,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public class Drivetrain extends SubsystemBase {
-  
+  // TODO changed this 
+  SlewRateLimiter accelerationLimiter = new SlewRateLimiter(2);
+
+
   CANSparkMax motor1 = new CANSparkMax(1,MotorType.kBrushless);
   CANSparkMax motor2 = new CANSparkMax(2,MotorType.kBrushless);
   CANSparkMax motor3 = new CANSparkMax(3,MotorType.kBrushless);
@@ -32,7 +36,7 @@ public class Drivetrain extends SubsystemBase {
 
   // this information could be of use in the future for distance tracking
   private static final double wheelRadiusInches = 3;
-  private static final double gearRatio = 10.71;//10.71
+  private static final double gearRatio = 8.46;//10.71
 
   private DifferentialDrive difDrivetrain = new DifferentialDrive(motor1, motor3);
   private final DifferentialDriveOdometry odometry;
@@ -89,6 +93,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Heading", gyro.getAngle());
     SmartDashboard.putData(gyro);
     SmartDashboard.putNumber("Rotate Angle", gyro.getYaw());
+    
 
     odometry.update(Rotation2d.fromDegrees(-getHeading()), getDistanceL(), getDistanceR());
 
@@ -162,6 +167,7 @@ public class Drivetrain extends SubsystemBase {
     difDrivetrain.feed();
   }
   public void driveMovement(double Xspeed, double Zrotation) {
+                                // this limits the acceleration TODO changed this
     difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);
   }
 }
