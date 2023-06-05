@@ -9,9 +9,12 @@ import frc.robot.subsystems.Limelight;
 
 public class ColoredShapePipeline extends CommandBase {
   private Limelight limelight;
+  private String _shape;
   /** Creates a new ColoredShapePipeline. */
-  public ColoredShapePipeline(Limelight _limelight) {
+  public ColoredShapePipeline(Limelight _limelight, String shape) {
     limelight = _limelight;
+    _shape = shape;
+
     addRequirements(_limelight);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,7 +26,12 @@ public class ColoredShapePipeline extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    limelight.setToShape();
+    if(_shape == "cone"){
+      limelight.setToCone();
+    }else if(_shape == "cube"){
+      limelight.setToCube();
+    }
+    
   }
 
   // Called once the command ends or is interrupted.

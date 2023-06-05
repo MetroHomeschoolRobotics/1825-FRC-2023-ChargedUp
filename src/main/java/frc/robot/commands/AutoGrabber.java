@@ -31,7 +31,6 @@ public class AutoGrabber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // TODO changed this  (added a third parameter in the if statement)
     if(grabberPneumatic.getGrabberState() == DoubleSolenoid.Value.kForward && grabberSensor.getSensorDistanceMM() <= 255.9 && grabberSensor.getSensorDistanceMM() >= 165.1 && grabberSensor.isMeasurementSuccessful()){
       grabberPneumatic.setGrabberClose();
     } else{

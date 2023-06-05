@@ -11,12 +11,15 @@ import frc.TrajectoryHelper;
 
 /** Add your docs here. */
 public class Constants {
-    public final static double ksVolts = 0.080799;
-    public final static double kvVolts = 0.070717;
-    public final static double kaVolts = 0.0080209;
-    public final static double kpDriveVel = 0.000000000000000000000000000000000022962;//0.000022962
+    public final static double ksVolts = 0.013659;
+    public final static double kvVolts = 1.0438;
+    public final static double kaVolts = 0.18004;
+    public final static double kpDriveVel2 = 0.22962;
 
-    public final static double _trackWidthMeters = Units.inchesToMeters(25.129);
+    public final static double kpDriveVel = 1.7218E-7;//0.000022962
+    public final static double rampTimeSec = 0.25;
+
+    public final static double _trackWidthMeters = Units.inchesToMeters(25.892);
     public final static DifferentialDriveKinematics _diffDriveKinematics = new DifferentialDriveKinematics(_trackWidthMeters);
 
     public final static double ramseteB = 10; //2;
@@ -33,5 +36,8 @@ public class Constants {
 
     public static final int BeamBreakSensor = 1;
     public static final int ToFSensor = 0;
+
+    public static final double nodeAprilHeightIn = 14.25;
+    public static final double substationAprilHeightIn = 23.375;
     
 }

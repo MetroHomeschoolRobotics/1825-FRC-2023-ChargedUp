@@ -10,7 +10,7 @@ import edu.wpi.first.math.util.Units;
 /** Add your docs here. */
 public class RobotMap {
 
-    public static double limelightCameraHeightM = Units.inchesToMeters(10.5);
+    public static double limelightCameraHeightM = Units.inchesToMeters(11.5);
 
     public static double armForce = 2.69; //lbs
     public static double armMaxLength = 62.25; //in

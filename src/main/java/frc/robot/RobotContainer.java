@@ -44,6 +44,7 @@ import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.RetractArm;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
+import frc.robot.commands.MoveToTarget;
 import frc.robot.commands.ReflectivePipeline;
 import frc.robot.commands.ToggleCompressor;
 import frc.robot.commands.AprilTagPipeline;
@@ -155,9 +156,9 @@ public class RobotContainer {
     final double gearBoxChange = 16.0/27.0;
     final double midConeGridAngle = 55;
     final double highConeGridAngle = 44;
-    final double midConeGridExtension = 141*gearBoxChange;
+    final double midConeGridExtension = 131*gearBoxChange;
     final double highConeGridExtension = 279*gearBoxChange;
-    final double midConeGridTimeout = 2.1;
+    final double midConeGridTimeout = 0.9;
     final double highConeGridTimeout = 1.5;
 
     _autoChooser.setDefaultOption("No autonomous", new WaitCommand(15));
@@ -174,7 +175,7 @@ public class RobotContainer {
     
     _autoChooser.addOption("Score", ((new moveArmPos(arm,midConeGridAngle,midConeGridExtension).raceWith(new WaitCommand(midConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))));
     //_autoChooser.addOption("Score, exit community, dock in middle", ((new moveArmPos(arm, 55,141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true)).andThen(loadPathPlannerTrajectoryToRamseteCommand("ReturnToDock", true)).andThen(new autoBalance(r_drivetrain)));
-    _autoChooser.addOption("Attack Nearest Human", ((new moveArmPos(arm, highConeGridAngle,highConeGridExtension).raceWith(new WaitCommand(highConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 30, 10)));
+    _autoChooser.addOption("Attack Nearest Human (high score)", ((new moveArmPos(arm, highConeGridAngle,highConeGridExtension).raceWith(new WaitCommand(highConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 30, 10)));
    
     SmartDashboard.putData(_autoChooser);
   }
@@ -185,7 +186,7 @@ public class RobotContainer {
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
     m_driverController.x().whileTrue(new AprilTagPipeline(limelight));
     m_driverController.b().whileTrue(new ReflectivePipeline(limelight));
-    m_driverController.leftBumper().whileTrue(new DriveToApril(r_drivetrain, limelight));
+    m_driverController.leftBumper().whileTrue(new MoveToTarget(limelight, r_drivetrain, "april"));
 
 
     ///////////////// Manipulator controller //////////////////
