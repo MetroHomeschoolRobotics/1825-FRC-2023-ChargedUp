@@ -75,7 +75,7 @@ public class DriveToApril extends CommandBase {
     return pidR.atSetpoint();
     }
     else{
-      return false;
-    } 
+      return true;
+    }
    }
 }

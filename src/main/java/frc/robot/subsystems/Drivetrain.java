@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
@@ -39,6 +40,7 @@ public class Drivetrain extends SubsystemBase {
   private static final double gearRatio = 8.46;//10.71
 
   private DifferentialDrive difDrivetrain = new DifferentialDrive(motor1, motor3);
+  private SlewRateLimiter accelLimiter = new SlewRateLimiter(1.0 / Constants.rampTimeSec); // TODO changed this
   private final DifferentialDriveOdometry odometry;
 
 
@@ -126,7 +128,6 @@ public class Drivetrain extends SubsystemBase {
     return gyro.getAngle();
   }
   public double getPitchAngle() {
-    // TODO I reversed this
     return gyro.getPitch()*-1;
   }
   public double getDistanceR() {
@@ -167,7 +168,9 @@ public class Drivetrain extends SubsystemBase {
     difDrivetrain.feed();
   }
   public void driveMovement(double Xspeed, double Zrotation) {
-                                // this limits the acceleration TODO changed this
-    difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);
+    // this slows down the forward acceleration
+    double forward = accelLimiter.calculate(Xspeed);
+
+    difDrivetrain.arcadeDrive(forward, Zrotation, true);
   }
 }
