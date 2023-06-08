@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -114,6 +115,9 @@ public class Drivetrain extends SubsystemBase {
     resetEncoders();
     odometry.resetPosition(Rotation2d.fromDegrees(-getHeading()), motor3.getEncoder().getPosition(),motor1.getEncoder().getPosition(), position);
   }
+  public Translation2d robotTranslation(){
+    return odometry.getPoseMeters().getTranslation();
+  }
   
   public Rotation2d getRotation2d() {//current heading in trajectory following format
     return Rotation2d.fromDegrees(-getHeading());
@@ -169,8 +173,8 @@ public class Drivetrain extends SubsystemBase {
   }
   public void driveMovement(double Xspeed, double Zrotation) {
     // this slows down the forward acceleration
-    double forward = accelLimiter.calculate(Xspeed);
+    //double forward = accelLimiter.calculate(Xspeed);
 
-    difDrivetrain.arcadeDrive(forward, Zrotation, true);
+    difDrivetrain.arcadeDrive(Xspeed, Zrotation, true);
   }
 }

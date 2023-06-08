@@ -58,7 +58,7 @@ public class ArmMovement extends CommandBase {
       arm.resetTeleEncoders();   // reset the encoder when the beam break sensor is true (when it is fully retracted)
     }
 
-    SmartDashboard.putNumber("Shoulder Stick", controller.getRightY());
+    //SmartDashboard.putNumber("Shoulder Stick", controller.getRightY());
 
   }
 

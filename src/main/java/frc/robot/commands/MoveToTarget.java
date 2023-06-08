@@ -13,8 +13,8 @@ import frc.robot.subsystems.Limelight;
 
 public class MoveToTarget extends CommandBase {
 
-  private PIDController pidTurn = new PIDController(Constants.kpDriveVel2, 0, 0);
-  private PIDController pidFoward = new PIDController(Constants.kpDriveVel2, 0, 0);
+  private PIDController pidTurn = new PIDController(0.09, 0, 0);
+  private PIDController pidFoward = new PIDController(0.2, 0, 0);
 
 
 
@@ -53,50 +53,28 @@ public class MoveToTarget extends CommandBase {
     }else if(pipeline == "reflective"){
       limelight.setToReflective();
     }
+    pidFoward.setTolerance(1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if(finishedTurning == false){
-    //   if(pidTurn.atSetpoint() == false){
-    //     if(limelight.hasTargests()){
-    //       turnSpeed = pidTurn.calculate(limelight.getTargetYaw(), 0);
-    //       System.out.println(limelight.getTargetYaw());
-    //     }else{
-    //       turnSpeed = 0;
-    //       drivetrain.getSignal();
-    //       finishedTurning = true;
-    //     }
-    //     drivetrain.autoTurnDrive(turnSpeed);
-    //   }else{
-    //     turnSpeed = 0;
-    //     drivetrain.getSignal();
-    //     finishedTurning = true;
-    //   }
-    // }else if(finishedTurning == true){
-    //   if(pidTurn.atSetpoint() == false){
-    //     if(limelight.hasTargests() == true){
-    //       forwardSpeed = -pidFoward.calculate(limelight.getLoadingAprilDistance(), Units.feetToMeters(3));
-    //       System.out.println(limelight.getLoadingAprilDistance());
-    //     }else{
-    //       forwardSpeed = 0;
-    //       drivetrain.getSignal();
-    //     }
-    //   }else{
-    //     forwardSpeed = 0;
-    //     drivetrain.getSignal();
-    //   }
-
     if(limelight.hasTargests()){
-      forwardSpeed = pidFoward.calculate(limelight.getLoadingAprilDistance(), 3);
-      turnSpeed = pidTurn.calculate(limelight.getTargetYaw(), 0);
+      forwardSpeed = -pidFoward.calculate(limelight.getLoadingAprilDistance(), 1);
+      turnSpeed = -pidTurn.calculate(limelight.getTargetYaw(), 0);
+      System.out.println(limelight.getLoadingAprilDistance());
     }else{
       forwardSpeed = 0;
       turnSpeed = 0;
     }
 
+
     drivetrain.driveMovement(forwardSpeed, turnSpeed);
+    if(pidTurn.atSetpoint() == true){
+        System.out.println("true");
+    }
+    //drivetrain.autoTurnDrive(turnSpeed);
+    //drivetrain.tankDriveVolts(forwardSpeed, forwardSpeed);
   }
 
   // Called once the command ends or is interrupted.
@@ -107,7 +85,8 @@ public class MoveToTarget extends CommandBase {
   @Override
   public boolean isFinished() {
     if(limelight.hasTargests() == true){
-      return false;
+      return pidFoward.atSetpoint();
+      
       }
       else{
         return true;

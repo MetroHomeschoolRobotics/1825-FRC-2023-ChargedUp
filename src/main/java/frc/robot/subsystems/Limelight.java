@@ -86,6 +86,9 @@ public class Limelight extends SubsystemBase {
   public Translation2d getNodeTranslation(){
     return PhotonUtils.estimateCameraToTargetTranslation(getNodeAprilDistance(), Rotation2d.fromDegrees(-getTargetYaw()));
   }
+  public double getObjectDistance(){
+    return limelight.getLatestResult().getBestTarget().getBestCameraToTarget().getTranslation().toTranslation2d().getDistance(drivetrain.robotTranslation());
+  }
 
   
   // this distance is for the loading zone

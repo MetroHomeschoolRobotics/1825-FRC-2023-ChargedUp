@@ -116,7 +116,7 @@ public double setArmStability(double angle, double radius){ //this equation help
   //double maxForce = 0.000303*radius + 0.0156;
   final double retractedForce = 0.03693;
   final double extendedForce = 0.234375;
-  final double extendedRadius = 110.0;
+  final double extendedRadius = 110.54;
   final double maxForce = (extendedForce - retractedForce)*radius/extendedRadius + retractedForce;
   
   double force = Math.sin(angle*(Math.PI/180))*maxForce;  // to get the input needed, we take the sine of the angle from the top and increase the amplitude depending on how extended the arm is times some constant
