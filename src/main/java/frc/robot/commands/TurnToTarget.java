@@ -14,23 +14,18 @@ public class TurnToTarget extends CommandBase {
   private Drivetrain drivetrain;
   private Limelight limelight;
 
-  private static double kp = 0.6;
-  private static double ki = 0;
-  private static double kd = 0;
-  private PIDController pidR = new PIDController(Constants.kpDriveVel, 0, 0);
-  private PIDController pidL = new PIDController(Constants.kpDriveVel, 0, 0);
-  private PIDController turnPID = new PIDController(0.005, ki, kd);
+  private PIDController pidTurn = new PIDController(0.03, 0, 0);
 
-  private static double distance;
-  private static double turnSpeed;
-  private static double speedR;
-  private static double speedL;
-  private static double TY;
+  private String pipeline;
+  
+  private double turnAngle;
+  private double turnSpeed;
 
   /** Creates a new TurnToTarget. */
-  public TurnToTarget(Drivetrain _drivetrain, Limelight _limelight) {
+  public TurnToTarget(Drivetrain _drivetrain, Limelight _limelight, String _pipeline) {
     drivetrain = _drivetrain;
     limelight = _limelight;
+    pipeline = _pipeline;
     addRequirements(_limelight);
     addRequirements(_drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -39,22 +34,32 @@ public class TurnToTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    distance = limelight.getNodeAprilDistance()-1;
+    if (pipeline == "cone") {
+      limelight.setToCone();
+    } else if (pipeline == "cube") {
+      limelight.setToCube();
+    }
+    
+    pidTurn.setTolerance(1);
+    pidTurn.enableContinuousInput(-180, 180);
 
+
+    if(limelight.hasTargets()) {
+      turnAngle = limelight.getTargetYaw();
+    }else {
+      turnAngle = 0;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    if(limelight.hasTargests()){
-      turnSpeed = turnPID.calculate(limelight.getTargetYaw(), 2.7);
-      System.out.println(limelight.getTargetYaw());
-    }else{
-      turnSpeed = 0;
-      drivetrain.getSignal();
+    if(limelight.hasTargets()) {
+      turnAngle = limelight.getTargetYaw();
     }
-    
+
+    turnSpeed = pidTurn.calculate(drivetrain.getHeading(), turnAngle);
 
     drivetrain.autoTurnDrive(turnSpeed);
   }
@@ -67,11 +72,6 @@ public class TurnToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(limelight.hasTargests() == true){
-      return pidR.atSetpoint();
-      }
-      else{
-        return false;
-      } 
+    return pidTurn.atSetpoint();
   }
 }
