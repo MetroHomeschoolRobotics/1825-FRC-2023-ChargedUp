@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
@@ -30,7 +31,7 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
+    SmartDashboard.putBoolean("limelight targets: ", limelight.getLatestResult().hasTargets());
   }
 
 
@@ -93,7 +94,8 @@ public class Limelight extends SubsystemBase {
   
   // this distance is for the loading zone
   public double getLoadingAprilDistance(){
-    return PhotonUtils.calculateDistanceToTargetMeters(RobotMap.limelightCameraHeightM, Units.inchesToMeters(Constants.substationAprilHeightIn), Units.degreesToRadians(drivetrain.getHeading()), Units.degreesToRadians(getTargetPitch()));
+    double targetPitch = limelight.getLatestResult().getBestTarget().getPitch();
+    return PhotonUtils.calculateDistanceToTargetMeters(RobotMap.limelightCameraHeightM, Units.inchesToMeters(Constants.substationAprilHeightIn), Units.degreesToRadians(drivetrain.getHeading()), Units.degreesToRadians(targetPitch));
   }
   // this distance is for the cube nodes
   public double getNodeAprilDistance(){
@@ -107,7 +109,7 @@ public class Limelight extends SubsystemBase {
     limelight.setLED(VisionLEDMode.kOff);
   }
 
-  public boolean hasTargests(){
+  public boolean hasTargets(){
     return limelight.getLatestResult().hasTargets();
   }
 }

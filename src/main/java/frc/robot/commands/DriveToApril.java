@@ -48,7 +48,7 @@ public class DriveToApril extends CommandBase {
   public void execute() {
     //System.out.println(-limelight.getTargetYaw());
 
-    if(limelight.hasTargests()){
+    if(limelight.hasTargets()){
       turnSpeed = turnPID.calculate(limelight.getTargetYaw(), 2.7);
       System.out.println(limelight.getTargetYaw());
     }else{
@@ -71,7 +71,7 @@ public class DriveToApril extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(limelight.hasTargests() == true){
+    if(limelight.hasTargets() == true){
     return pidR.atSetpoint();
     }
     else{
