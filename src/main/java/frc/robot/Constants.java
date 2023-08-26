@@ -11,18 +11,18 @@ import frc.TrajectoryHelper;
 
 /** Add your docs here. */
 public class Constants {
-    public final static double ksVolts = 0.013659;
-    public final static double kvVolts = 1.0438;
-    public final static double kaVolts = 0.18004;
+    public final static double ksVolts = 0.16988; //0.1667; //0.013659;
+    public final static double kvVolts = 2.2586*1.25; //1.0577; //1.0438;
+    public final static double kaVolts = 0.49195; //0.27778; //0.18004;
     public final static double kpDriveVel2 = 0.22962;
 
-    public final static double kpDriveVel = 1.7218E-7;//0.000022962
+    public final static double kpDriveVel = 0.51425; //0.18391; //1.7218E-7;//0.000022962
     public final static double rampTimeSec = 0.25;
 
-    public final static double _trackWidthMeters = Units.inchesToMeters(25.892);
+    public final static double _trackWidthMeters = Units.inchesToMeters(22.0);
     public final static DifferentialDriveKinematics _diffDriveKinematics = new DifferentialDriveKinematics(_trackWidthMeters);
 
-    public final static double ramseteB = 5; //2;  //10
+    public final static double ramseteB = 2; //2;  //10
     public final static double ramseteZeta = 0.7;  //0.7;  //1
 
 

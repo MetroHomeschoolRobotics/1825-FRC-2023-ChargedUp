@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
@@ -19,6 +21,24 @@ public class Arm extends SubsystemBase {
   CANSparkMax telescopingMotor2 = new CANSparkMax(7, MotorType.kBrushless);
   DutyCycleEncoder rotationEncoder = new DutyCycleEncoder(0);
   private DigitalInput BeamBreakSensor;
+
+// Built-in PID controllers for arm movement
+  final private double angleKp=0.005;
+  final private double angleKi=0;
+  final private double angleKd=0;
+
+  final private double extendKp = 0.1;
+  final private double extendKi = 0;
+  final private double extendKd = 0;
+
+
+  private Arm arm;
+
+  private PIDController pidAngle = new PIDController(angleKp, angleKi, angleKd);
+  private PIDController pidExtend = new PIDController(extendKp, extendKi, extendKd);
+
+
+
   /** Creates a new Arm. */
   public Arm() {
     angleMotor.setInverted(true);
@@ -27,6 +47,10 @@ public class Arm extends SubsystemBase {
     angleMotor.setSmartCurrentLimit(60);
     telescopingMotor.setSmartCurrentLimit(35);
     telescopingMotor2.setSmartCurrentLimit(35);
+
+    pidAngle.setTolerance(0.1);
+    pidExtend.setTolerance(0.1);
+
   }
 
   @Override
@@ -108,14 +132,27 @@ public class Arm extends SubsystemBase {
   }
 // Insert arm stability here 
 
+public boolean moveToTarget(double angle, double tele)
+{
+
+  final double maxAngleRate = 0.5;
+  final double maxTeleRate = 1.0;
+  moveAngleMotor((-MathUtil.clamp(pidAngle.calculate(getAbsoluteAngle(), angle), -maxAngleRate, maxAngleRate))+setArmStability(getAbsoluteAngle(), getTeleDistance()));
+
+  //moveTeleMotor(MathUtil.clamp(pidExtend.calculate(getTeleEncoderDistance(), tele), -maxTeleRate, maxTeleRate));
+
+  return pidAngle.atSetpoint();// && pidAngle.atSetpoint();
+
+}
+
 public double setArmStability(double angle, double radius){ //this equation helps the arm to fight gravity which is affected by the angle and arm extension length
     
   //Maximum radius = 111.14
   //Desired result at full extension. horizontal is 0.55
   //Desired result at full retraction, horizontal is 0.0859
   //double maxForce = 0.000303*radius + 0.0156;
-  final double retractedForce = 0.03693;
-  final double extendedForce = 0.234375;
+  final double retractedForce = 0.03693 * 0.25;
+  final double extendedForce = 0.234375 * 0.5;
   final double extendedRadius = 110.0;
   final double maxForce = (extendedForce - retractedForce)*radius/extendedRadius + retractedForce;
   

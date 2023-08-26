@@ -18,7 +18,7 @@ public class autoBalance extends CommandBase {
    * For Ki, use this equation: 2*Kp/Period
    * For Kd, use this equation: 0.125*Kp*period
    */
-  private double critGain = 0.01;  // multiply this for faster speeds if needed. (it will ocillate more when tipped)
+  private double critGain = 0.010;  // multiply this for faster speeds if needed. (it will ocillate more when tipped)
   private double period = 0.96;
   private double kp = 0.6*critGain;
   private double ki = (2*kp/period)*0; // this is the formula multiplied by zero (to keep the formula intact)

@@ -38,6 +38,7 @@ public class Drivetrain extends SubsystemBase {
   // this information could be of use in the future for distance tracking
   private static final double wheelRadiusInches = 3;
   private static final double gearRatio = 8.46;//10.71
+  private static final double minutesPerSecond = 1.0/60.0;
 
   private DifferentialDrive difDrivetrain = new DifferentialDrive(motor1, motor3);
   private SlewRateLimiter accelLimiter = new SlewRateLimiter(1.0 / Constants.rampTimeSec); // TODO changed this
@@ -59,11 +60,13 @@ public class Drivetrain extends SubsystemBase {
     motor4.follow(motor3);
     
     // Set the conversion factor of the encoders
+    // native posltion units are revolutions
     motor1.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
     motor3.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
 
-    motor1.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
-    motor3.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
+    // native velocity units are in RPM
+    motor1.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio)*minutesPerSecond);
+    motor3.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio)*minutesPerSecond);
     
     motor1.setSmartCurrentLimit(35);
     motor2.setSmartCurrentLimit(35);
@@ -87,6 +90,8 @@ public class Drivetrain extends SubsystemBase {
   
   @Override
   public void periodic() {
+    odometry.update(Rotation2d.fromDegrees(-getHeading()), getDistanceL(), getDistanceR());
+
     SmartDashboard.putNumber("Left Encoder", motor1.getEncoder().getPosition());
     SmartDashboard.putNumber("Right Encoder", motor3.getEncoder().getPosition());
     SmartDashboard.putNumber("Encoder Difference", motor1.getEncoder().getPosition() - motor3.getEncoder().getPosition());
@@ -95,10 +100,9 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Heading", gyro.getAngle());
     SmartDashboard.putData(gyro);
     SmartDashboard.putNumber("Rotate Angle", gyro.getYaw());
+    SmartDashboard.putNumber("Pose X", (odometry.getPoseMeters().getX()));
+    SmartDashboard.putNumber("Pose Y", (odometry.getPoseMeters().getY()));
     
-
-    odometry.update(Rotation2d.fromDegrees(-getHeading()), getDistanceL(), getDistanceR());
-
     field.setRobotPose(odometry.getPoseMeters());
     // This method will be called once per scheduler run
   }
@@ -111,6 +115,7 @@ public class Drivetrain extends SubsystemBase {
     gyro.reset();
   }
   public void resetOdometry(Pose2d position){
+    resetHeading();
     resetEncoders();
     odometry.resetPosition(Rotation2d.fromDegrees(-getHeading()), motor3.getEncoder().getPosition(),motor1.getEncoder().getPosition(), position);
   }
@@ -151,8 +156,8 @@ public class Drivetrain extends SubsystemBase {
 
 
   public void tankDriveVolts(double leftVolts, double rightVolts){
-    motor1.set(rightVolts);
-    motor3.set(leftVolts);
+    motor1.setVoltage(rightVolts);
+    motor3.setVoltage(leftVolts);
     difDrivetrain.feed();
   }
   public void autoDrive(double speed, double rotation) {
@@ -170,7 +175,7 @@ public class Drivetrain extends SubsystemBase {
   public void driveMovement(double Xspeed, double Zrotation) {
     // this slows down the forward acceleration
     double forward = accelLimiter.calculate(Xspeed);
-
+    forward = Xspeed; // dlm
     difDrivetrain.arcadeDrive(forward, Zrotation, true);
   }
 }

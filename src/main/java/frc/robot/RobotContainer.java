@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -44,6 +45,7 @@ import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.RetractArm;
 import frc.TrajectoryHelper;
 import frc.robot.commands.Grabber;
+import frc.robot.commands.PickUpCone;
 import frc.robot.commands.MoveToTarget;
 import frc.robot.commands.ReflectivePipeline;
 import frc.robot.commands.ToggleCompressor;
@@ -78,6 +80,7 @@ public class RobotContainer {
 
 
   SendableChooser<Command> _autoChooser = new SendableChooser<>();
+
 
   private void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
@@ -136,7 +139,7 @@ public class RobotContainer {
 
     RamseteController ramseteController = new RamseteController(Constants.ramseteB, Constants.ramseteZeta);
 
-    ramseteController.setTolerance(new Pose2d(0.00001,0.00001, new Rotation2d(1)));
+    //ramseteController.setTolerance(new Pose2d(0.00001,0.00001, new Rotation2d(1)));
 
     RamseteCommand ramseteCommand = new RamseteCommand(trajectory, r_drivetrain::getPosition,
         ramseteController,
@@ -144,7 +147,9 @@ public class RobotContainer {
         Constants._diffDriveKinematics,r_drivetrain::getWheelSpeed, new PIDController(Constants.kpDriveVel, 0, 0),
         new PIDController(Constants.kpDriveVel, 0, 0), (leftVolts, rightVolts)-> r_drivetrain.tankDriveVolts(leftVolts,rightVolts), r_drivetrain);
     
-    if(resetOdometry){
+        SendableRegistry.setName(ramseteCommand, "Ramsete Command");
+        
+        if(resetOdometry){
       return new SequentialCommandGroup(new InstantCommand(()->r_drivetrain.resetOdometry(trajectory.getInitialPose())),ramseteCommand);
     }else{
       return ramseteCommand;
@@ -160,11 +165,11 @@ public class RobotContainer {
     final double dualMotorGearRatio = 48.0*48.0/(16.0*14.0);
     final double gearBoxChange = dualMotorGearRatio/27.0;
     final double midConeGridAngle = 56;
-    final double highConeGridAngle = 48;
-    final double midConeGridExtension = 140*gearBoxChange;
+    final double highConeGridAngle = 44;//48;
+    final double midConeGridExtension = 130/*140*/*gearBoxChange;
     final double highConeGridExtension = 279*gearBoxChange;
-    final double midConeGridTimeout = 0.8;
-    final double highConeGridTimeout = 1.1;
+    final double midConeGridTimeout = 0.6;
+    final double highConeGridTimeout = 1.0;
 
     _autoChooser.setDefaultOption("No autonomous", new WaitCommand(15));
 
@@ -183,6 +188,12 @@ public class RobotContainer {
     _autoChooser.addOption("Attack Nearest Human (high score)", ((new moveArmPos(arm, highConeGridAngle,highConeGridExtension).raceWith(new WaitCommand(highConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 30, 10)));
    
     _autoChooser.addOption("Drive to Gamepiece", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true)); 
+
+    _autoChooser.addOption("Straight 6m", loadPathPlannerTrajectoryToRamseteCommand("Straight6meters", true)); 
+
+    _autoChooser.addOption("3 Colinear Points", loadPathPlannerTrajectoryToRamseteCommand("3 Colinear Points", true)); 
+   
+    _autoChooser.addOption("Pick up Cone", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true).andThen(new PickUpCone(arm, pneumatics))); 
 
     SmartDashboard.putData(_autoChooser);
   }
