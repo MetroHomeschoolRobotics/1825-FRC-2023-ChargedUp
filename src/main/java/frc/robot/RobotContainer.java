@@ -53,6 +53,7 @@ import frc.robot.commands.AprilTagPipeline;
 import frc.robot.commands.ArmMovement;
 import frc.robot.commands.ArmStability;
 import frc.robot.commands.AutoGrabber;
+import frc.robot.commands.AutoTurnExperiment;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -193,7 +194,9 @@ public class RobotContainer {
 
     _autoChooser.addOption("3 Colinear Points", loadPathPlannerTrajectoryToRamseteCommand("3 Colinear Points", true)); 
    
-    _autoChooser.addOption("Pick up Cone", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true).andThen(new PickUpCone(arm, pneumatics))); 
+    _autoChooser.addOption("Pick up Cone", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true).andThen(new PickUpCone(arm, pneumatics)).andThen(new AutoTurnExperiment(r_drivetrain, 180.0))); 
+
+    _autoChooser.addOption("Pirouette", new AutoTurnExperiment(r_drivetrain, 180.0));
 
     SmartDashboard.putData(_autoChooser);
   }
