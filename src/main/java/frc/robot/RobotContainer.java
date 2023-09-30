@@ -40,6 +40,7 @@ import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.TimeofFlight;
 import frc.robot.commands.DriveTeleop;
 import frc.robot.commands.DriveToApril;
+import frc.robot.commands.ExtendRotateArmCone;
 import frc.robot.commands.ExtendToPoint;
 import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.RetractArm;
@@ -207,6 +208,7 @@ public class RobotContainer {
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
     m_driverController.x().whileTrue(new AprilTagPipeline(limelight));
     m_driverController.b().whileTrue(new ReflectivePipeline(limelight));
+    m_driverController.y().whileTrue(new ExtendRotateArmCone(arm, pneumatics, grabbersensor));
     m_driverController.leftBumper().whileTrue(new MoveToTarget(limelight, r_drivetrain, "april"));
 
 

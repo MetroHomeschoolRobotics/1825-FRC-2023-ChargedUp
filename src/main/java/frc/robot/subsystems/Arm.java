@@ -132,14 +132,15 @@ public class Arm extends SubsystemBase {
   }
 // Insert arm stability here 
 
-public boolean moveToTarget(double angle, double tele)
-{
+public boolean moveToTarget(double angle, double tele) {
+
+// in degrees
 
   final double maxAngleRate = 0.5;
   final double maxTeleRate = 1.0;
   moveAngleMotor((-MathUtil.clamp(pidAngle.calculate(getAbsoluteAngle(), angle), -maxAngleRate, maxAngleRate))+setArmStability(getAbsoluteAngle(), getTeleDistance()));
 
-  //moveTeleMotor(MathUtil.clamp(pidExtend.calculate(getTeleEncoderDistance(), tele), -maxTeleRate, maxTeleRate));
+  moveTeleMotor(MathUtil.clamp(pidExtend.calculate(getTeleEncoderDistance(), tele), -maxTeleRate, maxTeleRate));
 
   return pidAngle.atSetpoint();// && pidAngle.atSetpoint();
 

@@ -14,5 +14,12 @@ public class RobotMap {
 
     public static double armForce = 2.69; //lbs
     public static double armMaxLength = 62.25; //in
-    public static double armMinLength = 27.78; //in
+    public static double armhundredlength=59; //in
+    public static double armMinLength = 26.00; //in
+
+    public static double shoulderHeight = 29.75;// in
+    public static double coneGrabberHeight = 7; // in
+
+    public static double armGrabberAxleHeight = 74;
+
 }
