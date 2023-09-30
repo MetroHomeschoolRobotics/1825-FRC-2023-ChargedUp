@@ -55,6 +55,7 @@ import frc.robot.commands.ArmMovement;
 import frc.robot.commands.ArmStability;
 import frc.robot.commands.AutoGrabber;
 import frc.robot.commands.AutoTurnExperiment;
+import frc.robot.commands.ScoreCone;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -167,11 +168,11 @@ public class RobotContainer {
     final double dualMotorGearRatio = 48.0*48.0/(16.0*14.0);
     final double gearBoxChange = dualMotorGearRatio/27.0;
     final double midConeGridAngle = 56;
-    final double highConeGridAngle = 44;//48;
+    final double highConeGridAngle = 43;//44;//48;
     final double midConeGridExtension = 130/*140*/*gearBoxChange;
     final double highConeGridExtension = 279*gearBoxChange;
     final double midConeGridTimeout = 0.6;
-    final double highConeGridTimeout = 1.0;
+    final double highConeGridTimeout = 1.05;
 
     _autoChooser.setDefaultOption("No autonomous", new WaitCommand(15));
 
@@ -189,6 +190,7 @@ public class RobotContainer {
     //_autoChooser.addOption("Score, exit community, dock in middle", ((new moveArmPos(arm, 55,141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true)).andThen(loadPathPlannerTrajectoryToRamseteCommand("ReturnToDock", true)).andThen(new autoBalance(r_drivetrain)));
     _autoChooser.addOption("Attack Nearest Human (high score)", ((new moveArmPos(arm, highConeGridAngle,highConeGridExtension).raceWith(new WaitCommand(highConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 30, 10)));
    
+    _autoChooser.addOption("Fancy High Score", new ScoreCone(arm, pneumatics, highConeGridAngle, highConeGridExtension, highConeGridTimeout, 0.05));
     _autoChooser.addOption("Drive to Gamepiece", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true)); 
 
     _autoChooser.addOption("Straight 6m", loadPathPlannerTrajectoryToRamseteCommand("Straight6meters", true)); 
