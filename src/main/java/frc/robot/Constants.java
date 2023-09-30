@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
@@ -39,5 +40,8 @@ public class Constants {
 
     public static final double nodeAprilHeightIn = 14.25;
     public static final double substationAprilHeightIn = 23.375;
+
+
+    public static final double GrabConeHeight = (Units.inchesToMeters(RobotMap.shoulderHeight)*100)-(24);
     
 }
