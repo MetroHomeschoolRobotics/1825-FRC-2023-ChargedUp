@@ -165,8 +165,8 @@ public class Drivetrain extends SubsystemBase {
     difDrivetrain.feed();
   }
   public void autoDrive(double speed, double rotation) {
-    motor1.set(speed-rotation);
-    motor3.set(speed-rotation);
+    motor1.set(speed);
+    motor3.set(speed);
     difDrivetrain.feed();
   }
   public void autoTurnDrive(double speed){

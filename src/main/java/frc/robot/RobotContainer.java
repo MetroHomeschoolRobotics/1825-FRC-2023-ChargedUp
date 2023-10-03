@@ -210,12 +210,11 @@ public class RobotContainer {
         .whileFalse(new DriveTeleop(r_drivetrain, m_driverController));
     m_driverController.x().whileTrue(new AprilTagPipeline(limelight));
     m_driverController.b().whileTrue(new ReflectivePipeline(limelight));
-    m_driverController.y().whileTrue(new ExtendRotateArmCone(arm, pneumatics, grabbersensor));
+    m_driverController.y().whileTrue(new ExtendRotateArmCone(arm, pneumatics, grabbersensor, r_drivetrain));
     m_driverController.leftBumper().whileTrue(new MoveToTarget(limelight, r_drivetrain, "april"));
 
 
     ///////////////// Manipulator controller //////////////////
-    Trigger BeamBreakDetector = new Trigger(() -> !arm.getBeamBreakSensor());
     m_manipulatorController.back().whileTrue(new ToggleCompressor(pneumatics));
     // TODO changed this to onTrue and took out the trigger/put it in the command and commented it
     //m_manipulatorController.povDown()/*.and(BeamBreakDetector)*/.whileTrue(new RetractArm(m_driverController, arm, -0.5));

@@ -5,11 +5,13 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.math.Num;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.TimeofFlight;
 
@@ -20,16 +22,20 @@ public class ExtendRotateArmCone extends CommandBase {
   private double extendDist = 0;
   private boolean finished = false;
   private TimeofFlight timeOfFlight;
+  private Drivetrain drivetrain;
   private double angle2;
+  private double NumInACos;
 
   /** Creates a new ExtendRotateArmCone. */
-  public ExtendRotateArmCone(Arm _arm, Pneumatics _grabber, TimeofFlight _TimeofFlight) {
+  public ExtendRotateArmCone(Arm _arm, Pneumatics _grabber, TimeofFlight _TimeofFlight, Drivetrain _drivetrain) {
     addRequirements(_arm);
     addRequirements(_grabber);
+    addRequirements(_drivetrain);
 
     arm = _arm;
     grabber = _grabber;
     timeOfFlight = _TimeofFlight;
+    drivetrain = _drivetrain;
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -43,12 +49,16 @@ public class ExtendRotateArmCone extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO returns NaN
-    angle2 = Units.radiansToDegrees(Math.PI - (Math.acos(Units.metersToInches(Constants.GrabConeHeight/100)/arm.getTeleDistance())));
+    //TODO Fix this
+    // Angle2 = pi - ArcCos(HeightOfWhereToGrabCone / TelescopingDist)
+    NumInACos = Units.metersToInches(Constants.GrabConeHeight/100)/arm.getTeleDistance();
+    angle2 = Units.radiansToDegrees(Math.PI - (Math.acos(NumInACos)));
     
-    SmartDashboard.putNumber("Angle Input", Units.metersToInches(Constants.GrabConeHeight/100)/arm.getTeleDistance());
+    SmartDashboard.putNumber("Angle Input", angle2);
+    SmartDashboard.putNumber("GrabbingConeHeight/TelescopingDist", NumInACos);
+    //System.out.println("Soludos Como estas!!!!!");
 
-    //arm.moveToTarget(Units.radiansToDegrees(angle2), extendDist);
+    arm.moveToTarget(110, 10);
 
     
 
@@ -56,8 +66,11 @@ public class ExtendRotateArmCone extends CommandBase {
       grabber.setGrabberClose();
       finished = true;
     }else{
-      extendDist += 0.5;
+      //extendDist += 0.5;
       //angle2-=0.07;
+
+      // TODO Instead of extending the arm to the cone, the robobt will drive to the cone
+      drivetrain.autoDrive(0.1, 0);
     }
 
     
