@@ -49,7 +49,6 @@ public class ExtendRotateArmCone extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO Fix this
     // Angle2 = pi - ArcCos(HeightOfWhereToGrabCone / TelescopingDist)
     NumInACos = Units.metersToInches(Constants.GrabConeHeight/100)/arm.getTeleDistance();
     angle2 = Units.radiansToDegrees(Math.PI - (Math.acos(NumInACos)));
@@ -58,19 +57,18 @@ public class ExtendRotateArmCone extends CommandBase {
     SmartDashboard.putNumber("GrabbingConeHeight/TelescopingDist", NumInACos);
     //System.out.println("Soludos Como estas!!!!!");
 
-    arm.moveToTarget(110, 10);
+    arm.moveToTarget(130, 20);
 
     
 
-    if(timeOfFlight.isMeasurementSuccessful() && timeOfFlight.getSensorDistanceMM() <= 260){
+    if(timeOfFlight.isMeasurementSuccessful() && timeOfFlight.getSensorDistanceMM() <= 450){//300
       grabber.setGrabberClose();
       finished = true;
     }else{
       //extendDist += 0.5;
       //angle2-=0.07;
 
-      // TODO Instead of extending the arm to the cone, the robobt will drive to the cone
-      drivetrain.autoDrive(0.1, 0);
+      drivetrain.autoDrive(0.2, 0);
     }
 
     
