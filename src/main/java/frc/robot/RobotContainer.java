@@ -50,6 +50,7 @@ import frc.robot.commands.PickUpCone;
 import frc.robot.commands.MoveToTarget;
 import frc.robot.commands.ReflectivePipeline;
 import frc.robot.commands.ToggleCompressor;
+import frc.robot.commands.TurnToTarget;
 import frc.robot.commands.AprilTagPipeline;
 import frc.robot.commands.ArmMovement;
 import frc.robot.commands.ArmStability;
@@ -170,36 +171,37 @@ public class RobotContainer {
     final double midConeGridAngle = 56;
     final double highConeGridAngle = 43;//44;//48;
     final double midConeGridExtension = 130/*140*/*gearBoxChange;
-    final double highConeGridExtension = 279*gearBoxChange;
+    final double highConeGridExtension = 279*gearBoxChange; // 106.2857
     final double midConeGridTimeout = 0.6;
     final double highConeGridTimeout = 1.05;
 
     _autoChooser.setDefaultOption("No autonomous", new WaitCommand(15));
 
-    _autoChooser.addOption("Go forward, turn, and dock (L)", loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true).andThen(new autoBalance(r_drivetrain))); 
+    _autoChooser.addOption("Go forward, turn, and dock (turn L)", loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true).andThen(new autoBalance(r_drivetrain))); 
 
-    _autoChooser.addOption("Go forward, turn, and dock (R)", loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true).andThen(new autoBalance(r_drivetrain)));
+    _autoChooser.addOption("Go forward, turn, and dock (turn R)", loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true).andThen(new autoBalance(r_drivetrain)));
 
-    _autoChooser.addOption("Score, exit community, and dock (L)",((new moveArmPos(arm, midConeGridAngle, midConeGridExtension).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true)).andThen(new autoBalance(r_drivetrain)));
+    _autoChooser.addOption("Score, exit community, and dock (turn L)",((new moveArmPos(arm, midConeGridAngle, midConeGridExtension).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("TurnPath", true)).andThen(new autoBalance(r_drivetrain)));
     
-    _autoChooser.addOption("Score, exit community, and dock (R)",((new moveArmPos(arm, midConeGridAngle, midConeGridExtension).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true)).andThen(new autoBalance(r_drivetrain)));
+    _autoChooser.addOption("Score, exit community, and dock (turn R)",((new moveArmPos(arm, midConeGridAngle, midConeGridExtension).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("CurveThenBalanceR", true)).andThen(new autoBalance(r_drivetrain)));
     
     _autoChooser.addOption("Score, exit community", ((new moveArmPos(arm, midConeGridAngle, midConeGridExtension).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true)));
     
-    _autoChooser.addOption("Score", ((new moveArmPos(arm,midConeGridAngle,midConeGridExtension).raceWith(new WaitCommand(midConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))));
+    _autoChooser.addOption("mid Score", ((new moveArmPos(arm,midConeGridAngle,midConeGridExtension).raceWith(new WaitCommand(midConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))));
     //_autoChooser.addOption("Score, exit community, dock in middle", ((new moveArmPos(arm, 55,141).raceWith(new WaitCommand(2.1))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 0, 10).raceWith(new WaitCommand(2.1))).andThen(loadPathPlannerTrajectoryToRamseteCommand("Straight4meters", true)).andThen(loadPathPlannerTrajectoryToRamseteCommand("ReturnToDock", true)).andThen(new autoBalance(r_drivetrain)));
-    _autoChooser.addOption("Attack Nearest Human (high score)", ((new moveArmPos(arm, highConeGridAngle,highConeGridExtension).raceWith(new WaitCommand(highConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 30, 10)));
+    _autoChooser.addOption("High Score", ((new moveArmPos(arm, highConeGridAngle,highConeGridExtension).raceWith(new WaitCommand(highConeGridTimeout))).andThen(new Grabber(pneumatics))).andThen(new WaitCommand(0.05)).andThen(new moveArmPos(arm, 30, 10)));
    
-    _autoChooser.addOption("Fancy High Score", new ScoreCone(arm, pneumatics, highConeGridAngle, highConeGridExtension, highConeGridTimeout, 0.05));
+    _autoChooser.addOption("High Score W/ new command", new ScoreCone(arm, pneumatics, highConeGridAngle, highConeGridExtension, highConeGridTimeout, 0.05));
+    
     _autoChooser.addOption("Drive to Gamepiece", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true)); 
 
     _autoChooser.addOption("Straight 6m", loadPathPlannerTrajectoryToRamseteCommand("Straight6meters", true)); 
 
     _autoChooser.addOption("3 Colinear Points", loadPathPlannerTrajectoryToRamseteCommand("3 Colinear Points", true)); 
    
-    _autoChooser.addOption("Pick up Cone", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true).andThen(new PickUpCone(arm, pneumatics)).andThen(new AutoTurnExperiment(r_drivetrain, 180.0))); 
+    _autoChooser.addOption("Pick up Cone", loadPathPlannerTrajectoryToRamseteCommand("GoToGamePiece", true).andThen(new AutoTurnExperiment(r_drivetrain, 180.0)).andThen(new TurnToTarget(r_drivetrain, limelight, "cone")).andThen(new PickUpCone(arm, pneumatics))); 
 
-    _autoChooser.addOption("Pirouette", new AutoTurnExperiment(r_drivetrain, 180.0));
+    _autoChooser.addOption("turn 180", new AutoTurnExperiment(r_drivetrain, 180.0));
 
     SmartDashboard.putData(_autoChooser);
   }
