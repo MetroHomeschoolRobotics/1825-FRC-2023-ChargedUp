@@ -12,7 +12,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -65,6 +64,8 @@ public class Drivetrain extends SubsystemBase {
     motor1.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
     motor3.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
 
+    motor1.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio));
+
     // native velocity units are in RPM
     motor1.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio)*minutesPerSecond);
     motor3.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches)*2*Math.PI)/(gearRatio)*minutesPerSecond);
@@ -103,6 +104,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Rotate Angle", gyro.getYaw());
     SmartDashboard.putNumber("Pose X", (odometry.getPoseMeters().getX()));
     SmartDashboard.putNumber("Pose Y", (odometry.getPoseMeters().getY()));
+    SmartDashboard.putNumber("Drivetrain speed", motor1.getEncoder().getVelocity());
     
     field.setRobotPose(odometry.getPoseMeters());
     // This method will be called once per scheduler run

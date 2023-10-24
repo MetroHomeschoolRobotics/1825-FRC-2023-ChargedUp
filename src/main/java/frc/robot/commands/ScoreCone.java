@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Pneumatics;
-import frc.robot.commands.moveArmPos;
 
 // Composite command for scoring a cone
 public class ScoreCone extends SequentialCommandGroup {

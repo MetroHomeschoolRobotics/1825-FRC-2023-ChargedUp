@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 
-import edu.wpi.first.math.Num;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,7 +18,6 @@ public class ExtendRotateArmCone extends CommandBase {
 
   private Arm arm;
   private Pneumatics grabber;
-  private double extendDist = 0;
   private boolean finished = false;
   private TimeofFlight timeOfFlight;
   private Drivetrain drivetrain;

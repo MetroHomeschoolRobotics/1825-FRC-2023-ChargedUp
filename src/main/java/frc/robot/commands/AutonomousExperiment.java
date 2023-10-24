@@ -6,11 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class AutonomousExperiment extends CommandBase {
+
+  // TODO delete this class
+
 
   private double critGain = 0.2;  // multiply this for faster speeds if needed. (it will ocillate more when tipped)
   private double period = 0.96;
